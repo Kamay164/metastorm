@@ -75,7 +75,7 @@ Metastorm/
 | # | Etapa | Status |
 |---|-------|--------|
 | 0 | Preparação, linha de base e publicação inicial | ✅ (falta o 1º push do Vinicius) |
-| 1 | Otimização de mídia | ⬜ |
+| 1 | Otimização de mídia | ✅ (aguardando conferência do Vinicius) |
 | 2 | Design system e layout base | ⬜ |
 | 3 | Landing page — seções | ⬜ |
 | 4 | Vídeo da seção "Transmissões ao vivo" | ⬜ |
@@ -166,6 +166,10 @@ Metastorm/
 - Git do dia a dia: `git add .` → `git commit -m "etapa-N: ..."` → `git push`
 
 ## Pendências / decisões em aberto
+- **Etapa 1 — mídia com marcas de terceiros:** as fotos `nivel-profissional.jpg` (patrocinadores visíveis), `jogos-videoame.jpg` e os cards do carrossel (arte de jogos) têm marcas de terceiros. Confirmar origem e licença antes de publicar em público; registrar em `CREDITS.md`.
+- **Etapa 1 — carrossel:** as 5 miniaturas são 133×160 px e ficam borradas em 200 px. Pedir versões maiores ao Vinicius, se ele tiver.
+- **Etapa 1 — `bg_branco.png`:** não foi copiado. No CSS original o caminho está errado e a imagem nunca aparece. Decidir na Etapa 2 se entra no design.
+- **Etapa 1 — logo:** versões SVG em `src/assets/logo/` (`logo-escuro.svg`, `logo-branco.svg`, `icone-branco.svg`). Usar nos componentes da Etapa 2.
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
 - Vídeo definitivo: Vinicius fornecerá? (até lá, usar provisório de licença livre).
 - Nome do repositório e URL final no GitHub Pages: preencher após o 1º push.
