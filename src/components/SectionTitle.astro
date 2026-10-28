@@ -1,0 +1,53 @@
+---
+/**
+ * Título de seção: barra chanfrada (herdeira da barra laranja do original) + título + texto de apoio opcional.
+ * A cor da barra segue o tom da seção (escuro, claro ou laranja).
+ */
+interface Props {
+  title: string;
+  lead?: string;
+  id?: string;
+  level?: 2 | 3;
+  align?: 'start' | 'center';
+}
+
+const { title, lead, id, level = 2, align = 'start' } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
+---
+
+<div class:list={['titulo-secao', `titulo-secao--${align}`]}>
+  <span class="titulo-secao__barra" aria-hidden="true"></span>
+  <Heading id={id} class="titulo-secao__titulo">{title}</Heading>
+  {lead && <p class="titulo-secao__lead">{lead}</p>}
+</div>
+
+<style>
+  .titulo-secao {
+    display: grid;
+    gap: var(--e-4);
+    justify-items: start;
+    max-width: 48rem;
+  }
+
+  .titulo-secao--center {
+    justify-items: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .titulo-secao__barra {
+    width: 4.5rem;
+    height: 0.5rem;
+    background: var(--destaque);
+    clip-path: polygon(0.5rem 0, 100% 0, calc(100% - 0.5rem) 100%, 0 100%);
+  }
+
+  .titulo-secao__titulo {
+    color: var(--fg);
+  }
+
+  .titulo-secao__lead {
+    color: var(--fg-2);
+    font-size: var(--t-lg);
+  }
+</style>

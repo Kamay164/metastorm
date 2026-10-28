@@ -1,0 +1,275 @@
+---
+/**
+ * Página de teste da Etapa 2 (não indexada).
+ * Mostra tokens e componentes para aprovação da direção visual.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+
+const cores = [
+  { nome: 'Laranja Metastorm', hex: '#F36422', uso: 'Ações principais e detalhes', claro: false },
+  { nome: 'Brasa', hex: '#F05024', uso: 'Hover do botão principal', claro: false },
+  { nome: 'Laranja texto', hex: '#C2410C', uso: 'Links e textos em laranja sobre fundo claro', claro: false },
+  { nome: 'Carvão', hex: '#1B1D21', uso: 'Fundo principal', claro: false },
+  { nome: 'Grafite', hex: '#24272D', uso: 'Superfícies sobre o carvão', claro: false },
+  { nome: 'Aço', hex: '#3A3E46', uso: 'Linhas e bordas no escuro', claro: false },
+  { nome: 'Névoa', hex: '#A9ADB5', uso: 'Texto secundário no escuro', claro: true },
+  { nome: 'Gelo', hex: '#F8F8F8', uso: 'Texto no escuro e fundo claro', claro: true },
+];
+
+const tons = [
+  { classe: 'tom-escuro', nome: 'Tom escuro (padrão)' },
+  { classe: 'tom-claro', nome: 'Tom claro' },
+  { classe: 'tom-laranja', nome: 'Tom laranja' },
+];
+---
+
+<BaseLayout
+  title="Design system"
+  description="Página de teste com as cores, a tipografia e os componentes do novo Metastorm."
+  noindex
+>
+  <section class="secao tom-escuro">
+    <div class="container intro">
+      <h1>Design system</h1>
+      <p class="intro__texto">
+        Página de teste da Etapa 2. Ela mostra as cores, a tipografia e os componentes do novo Metastorm. Confira em
+        celular, tablet e computador antes de seguir para a landing page.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao tom-escuro" aria-labelledby="t-cores">
+    <div class="container pilha">
+      <SectionTitle id="t-cores" title="Cores" lead="Identidade original mantida, com tons de apoio para profundidade e contraste." />
+      <ul class="cores" role="list">
+        {
+          cores.map((c) => (
+            <li class="cor">
+              <span class="cor__amostra" style={`background:${c.hex}`} />
+              <span class="cor__nome">{c.nome}</span>
+              <code class="cor__hex">{c.hex}</code>
+              <span class="cor__uso">{c.uso}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao tom-claro" aria-labelledby="t-tipo">
+    <div class="container pilha">
+      <SectionTitle
+        id="t-tipo"
+        title="Tipografia"
+        lead="Roboto Condensed nos títulos, Roboto no texto. Tamanhos fluidos: crescem junto com a tela."
+      />
+      <div class="tipos">
+        <div class="tipo">
+          <span class="tipo__rotulo">Título da página (h1)</span>
+          <p class="tipo__h1">Explore seu lado pro-player</p>
+        </div>
+        <div class="tipo">
+          <span class="tipo__rotulo">Título de seção (h2)</span>
+          <p class="tipo__h2">Competições para todos os níveis</p>
+        </div>
+        <div class="tipo">
+          <span class="tipo__rotulo">Subtítulo (h3)</span>
+          <p class="tipo__h3">Inscrição</p>
+        </div>
+        <div class="tipo">
+          <span class="tipo__rotulo">Texto de apoio</span>
+          <p class="tipo__lead">Gerencie e participe de ligas e campeonatos dos seus jogos favoritos de e-Sports.</p>
+        </div>
+        <div class="tipo">
+          <span class="tipo__rotulo">Texto corrido</span>
+          <p>
+            Criamos formulários personalizados para cada modalidade do torneio. Organizamos a chave do torneio e a
+            ordem das partidas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao tom-escuro" aria-labelledby="t-botoes">
+    <div class="container pilha">
+      <SectionTitle
+        id="t-botoes"
+        title="Botões"
+        lead="Principal com cantos chanfrados. Contorno com a linha animada do botão original: passe o mouse ou navegue com Tab."
+      />
+    </div>
+  </section>
+
+  {
+    tons.map((t) => (
+      <section class={`amostra-tom ${t.classe}`} aria-label={`Botões no ${t.nome.toLowerCase()}`}>
+        <div class="container amostra-tom__linha">
+          <span class="amostra-tom__nome">{t.nome}</span>
+          <div class="amostra-tom__botoes">
+            <Button href="#t-botoes">Criar conta</Button>
+            <Button href="#t-botoes" variant="outline">
+              Entrar
+            </Button>
+            <Button href="#t-botoes" size="sm">
+              Criar conta
+            </Button>
+            <Button href="#t-botoes" variant="outline" size="sm">
+              Entrar
+            </Button>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="secao tom-escuro" aria-labelledby="t-titulos">
+    <div class="container">
+      <SectionTitle
+        id="t-titulos"
+        title="Títulos de seção"
+        lead="A barra acima do título vem da barra laranja do site original. A cor acompanha o tom da seção."
+      />
+    </div>
+  </section>
+
+  <section class="secao tom-claro" aria-label="Exemplo de título em seção clara">
+    <div class="container">
+      <SectionTitle title="Competições para todos os níveis" level={3} />
+    </div>
+  </section>
+
+  <section class="secao tom-laranja" aria-label="Exemplo de título em seção laranja">
+    <div class="container">
+      <SectionTitle title="Cuidamos de todas as etapas" level={3} />
+    </div>
+  </section>
+
+  <section class="secao tom-escuro" aria-label="Exemplo de título centralizado">
+    <div class="container">
+      <SectionTitle
+        title="Torneios e transmissões ao vivo"
+        lead="Acompanhe as transmissões dos seus campeonatos pela nossa plataforma."
+        align="center"
+        level={3}
+      />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--e-5);
+  }
+
+  .intro__texto {
+    color: var(--fg-2);
+    font-size: var(--t-lg);
+  }
+
+  .pilha {
+    display: grid;
+    gap: var(--e-7);
+  }
+
+  /* ---------- Cores ---------- */
+  .cores {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--e-5);
+  }
+
+  .cor {
+    display: grid;
+    gap: var(--e-1);
+  }
+
+  .cor__amostra {
+    height: 5rem;
+    margin-bottom: var(--e-2);
+    border: 1px solid var(--linha);
+  }
+
+  .cor__nome {
+    font-weight: 700;
+  }
+
+  .cor__hex {
+    color: var(--fg-2);
+    font-size: var(--t-sm);
+  }
+
+  .cor__uso {
+    color: var(--fg-2);
+    font-size: var(--t-sm);
+  }
+
+  /* ---------- Tipografia ---------- */
+  .tipos {
+    display: grid;
+    gap: var(--e-6);
+  }
+
+  .tipo {
+    display: grid;
+    gap: var(--e-2);
+    padding-top: var(--e-4);
+    border-top: 1px solid var(--linha);
+  }
+
+  .tipo__rotulo {
+    color: var(--fg-2);
+    font-size: var(--t-sm);
+  }
+
+  .tipo__h1,
+  .tipo__h2,
+  .tipo__h3 {
+    max-width: none;
+    font-family: var(--f-display);
+    font-weight: 700;
+    line-height: var(--lh-titulo);
+  }
+
+  .tipo__h1 {
+    font-size: var(--t-3xl);
+    text-transform: uppercase;
+  }
+
+  .tipo__h2 {
+    font-size: var(--t-2xl);
+    text-transform: uppercase;
+  }
+
+  .tipo__h3 {
+    font-size: var(--t-xl);
+  }
+
+  .tipo__lead {
+    color: var(--fg-2);
+    font-size: var(--t-lg);
+  }
+
+  /* ---------- Amostras de botões por tom ---------- */
+  .amostra-tom__linha {
+    display: grid;
+    gap: var(--e-4);
+    padding-block: var(--e-6);
+  }
+
+  .amostra-tom__nome {
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--fg-2);
+  }
+
+  .amostra-tom__botoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e-4);
+  }
+</style>

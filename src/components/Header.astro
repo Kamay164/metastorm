@@ -1,0 +1,248 @@
+---
+/**
+ * Cabeçalho fixo com logo, links e ações (Entrar / Criar conta).
+ * No celular (< 768px) os itens ficam num menu aberto pelo botão "Menu".
+ * Sem JavaScript, o menu fica sempre visível (a classe .js só existe com JS ativo).
+ */
+import logoBranco from '../assets/logo/logo-branco.svg';
+import Button from './Button.astro';
+import { navLinks, navActions } from '../data/nav';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<header class="cabecalho">
+  <div class="container cabecalho__barra">
+    <a class="cabecalho__logo" href={base} aria-label="Metastorm, página inicial">
+      <img src={logoBranco.src} width="180" height="28" alt="" />
+    </a>
+
+    <button
+      class="cabecalho__menu-botao"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      data-menu-botao
+    >
+      <span class="cabecalho__icone" aria-hidden="true"><span></span></span>
+      <span class="cabecalho__menu-rotulo">Menu</span>
+    </button>
+
+    <nav class="cabecalho__menu" id="menu-principal" aria-label="Principal" data-menu>
+      <ul class="cabecalho__links" role="list">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={`${base}${link.path}`}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="cabecalho__acoes">
+        <Button href={`${base}${navActions.entrar.path}`} variant="outline" size="sm">
+          {navActions.entrar.label}
+        </Button>
+        <Button href={`${base}${navActions.criarConta.path}`} size="sm">
+          {navActions.criarConta.label}
+        </Button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const botao = document.querySelector<HTMLButtonElement>('[data-menu-botao]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (botao && menu) {
+    const definir = (aberto: boolean) => {
+      botao.setAttribute('aria-expanded', String(aberto));
+      menu.toggleAttribute('data-aberto', aberto);
+    };
+
+    botao.addEventListener('click', () => definir(botao.getAttribute('aria-expanded') !== 'true'));
+
+    // Esc fecha o menu e devolve o foco ao botão
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu.hasAttribute('data-aberto')) {
+        definir(false);
+        botao.focus();
+      }
+    });
+
+    // Clicar num link fecha o menu (útil para âncoras na mesma página)
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) definir(false);
+    });
+
+    // Ao passar para a tela larga, o menu volta ao estado normal
+    matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
+      if (e.matches) definir(false);
+    });
+  }
+</script>
+
+<style>
+  .cabecalho {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(27 29 33 / 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--c-aco);
+    color: var(--c-gelo);
+  }
+
+  .cabecalho__barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-4);
+    min-height: 4.25rem;
+  }
+
+  .cabecalho__logo {
+    display: block;
+    padding-block: var(--e-2);
+  }
+
+  .cabecalho__logo img {
+    width: clamp(8.5rem, 6rem + 6vw, 11.25rem);
+    height: auto;
+  }
+
+  /* ---------- Botão do menu (só no celular, só com JS) ---------- */
+  .cabecalho__menu-botao {
+    display: none;
+    align-items: center;
+    gap: var(--e-3);
+    min-height: 2.75rem;
+    padding: 0 var(--e-3);
+    border: 1px solid var(--c-aco);
+    background: transparent;
+    font-weight: 500;
+  }
+
+  .cabecalho__icone,
+  .cabecalho__icone::before,
+  .cabecalho__icone::after,
+  .cabecalho__icone span {
+    display: block;
+    width: 1.125rem;
+    height: 2px;
+    background: currentColor;
+    transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+  }
+
+  .cabecalho__icone {
+    position: relative;
+    background: transparent;
+  }
+
+  .cabecalho__icone::before,
+  .cabecalho__icone::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .cabecalho__icone::before {
+    top: -6px;
+  }
+
+  .cabecalho__icone::after {
+    top: 6px;
+  }
+
+  [aria-expanded='true'] .cabecalho__icone span {
+    opacity: 0;
+  }
+
+  [aria-expanded='true'] .cabecalho__icone::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  [aria-expanded='true'] .cabecalho__icone::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* ---------- Menu ---------- */
+  .cabecalho__menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e-4) var(--e-6);
+  }
+
+  .cabecalho__links {
+    display: flex;
+    gap: var(--e-5);
+    padding: 0;
+    list-style: none;
+  }
+
+  .cabecalho__links a {
+    display: inline-block;
+    padding-block: var(--e-2);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .cabecalho__links a:hover {
+    color: var(--c-laranja);
+    border-bottom-color: var(--c-laranja);
+  }
+
+  .cabecalho__acoes {
+    display: flex;
+    gap: var(--e-3);
+  }
+
+  /* ---------- Celular: menu recolhido (somente com JS ativo) ---------- */
+  @media (max-width: 767.98px) {
+    :global(.js) .cabecalho__menu-botao {
+      display: inline-flex;
+    }
+
+    :global(.js) .cabecalho__menu {
+      display: none;
+    }
+
+    :global(.js) .cabecalho__menu[data-aberto] {
+      display: flex;
+    }
+
+    .cabecalho__menu {
+      flex-basis: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--e-5);
+      padding-block: var(--e-3) var(--e-6);
+    }
+
+    .cabecalho__links {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .cabecalho__links a {
+      display: block;
+      padding-block: var(--e-3);
+      font-size: var(--t-lg);
+      border-bottom: 1px solid var(--c-aco);
+    }
+
+    .cabecalho__acoes {
+      flex-direction: column;
+    }
+
+    .cabecalho__acoes :global(.btn) {
+      width: 100%;
+      min-height: 3rem;
+    }
+  }
+</style>

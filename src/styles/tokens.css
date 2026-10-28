@@ -1,0 +1,107 @@
+/* =========================================================
+   Metastorm — tokens de design
+   Fonte única de cores, tipografia, espaços e formas.
+   Breakpoints (usar estes valores nas media queries, mobile-first):
+     sm 480px · md 768px · lg 1024px · xl 1280px
+   ========================================================= */
+
+:root {
+  /* ---------- Cores da marca ---------- */
+  --c-laranja: #f36422;        /* laranja Metastorm (cor principal) */
+  --c-brasa: #f05024;          /* laranja mais quente: hover/ativo */
+  --c-laranja-texto: #c2410c;  /* laranja para TEXTO sobre fundo claro (contraste 4,9:1) */
+  --c-carvao: #1b1d21;         /* fundo escuro principal */
+  --c-grafite: #24272d;        /* superfícies sobre o carvão */
+  --c-aco: #3a3e46;            /* linhas e bordas no escuro */
+  --c-nevoa: #a9adb5;          /* texto secundário no escuro (7,5:1) */
+  --c-gelo: #f8f8f8;           /* texto no escuro / fundo claro */
+  --c-chumbo: #5a5f69;         /* texto secundário no claro (6:1) */
+
+  /* ---------- Tipografia ---------- */
+  --f-display: 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --f-texto: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Escala fluida (≈ razão 1,25 no celular → 1,333 no desktop) */
+  --t-sm: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --t-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --t-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --t-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.875rem);
+  --t-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --t-3xl: clamp(2.5rem, 1.8rem + 3.4vw, 4.75rem);
+
+  --lh-texto: 1.6;
+  --lh-titulo: 1.05;
+  --medida: 65ch;              /* largura máxima de parágrafos */
+
+  /* ---------- Espaços ---------- */
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-5: 1.5rem;
+  --e-6: 2rem;
+  --e-7: 3rem;
+  --e-8: 4rem;
+  --e-secao: clamp(4rem, 3rem + 5vw, 8rem);   /* respiro vertical das seções */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem); /* margem lateral */
+  --largura: 75rem;                            /* 1200px de conteúdo */
+
+  /* ---------- Formas ---------- */
+  --chanfro: 0.875rem;         /* canto cortado, assinatura visual (estilo HUD de jogo) */
+  --raio: 0.375rem;
+  --borda: 1px solid var(--c-aco);
+  --sombra: 0 1.25rem 2.5rem -1.25rem rgb(0 0 0 / 0.6);
+
+  /* ---------- Movimento ---------- */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 220ms;
+  --dur-lenta: 700ms;
+
+  /* ---------- Tom padrão (escuro) ---------- */
+  --bg: var(--c-carvao);
+  --fg: var(--c-gelo);
+  --fg-2: var(--c-nevoa);
+  --linha: var(--c-aco);
+  --destaque: var(--c-laranja);        /* detalhes decorativos */
+  --destaque-texto: var(--c-laranja);  /* links e textos em laranja */
+  --sobre-destaque: var(--c-carvao);   /* texto sobre o fundo de destaque (botão principal) */
+}
+
+/* ---------- Tons de seção ---------- */
+/* Use em qualquer <section>: class="tom-claro" ou class="tom-laranja". */
+.tom-escuro {
+  --bg: var(--c-carvao);
+  --fg: var(--c-gelo);
+  --fg-2: var(--c-nevoa);
+  --linha: var(--c-aco);
+  --destaque: var(--c-laranja);
+  --destaque-texto: var(--c-laranja);
+  --sobre-destaque: var(--c-carvao);
+}
+
+.tom-claro {
+  --bg: var(--c-gelo);
+  --fg: var(--c-carvao);
+  --fg-2: var(--c-chumbo);
+  --linha: #dcdde0;
+  --destaque: var(--c-laranja);
+  --destaque-texto: var(--c-laranja-texto);
+  --sobre-destaque: var(--c-carvao);
+}
+
+.tom-laranja {
+  --bg: var(--c-laranja);
+  --fg: var(--c-carvao);
+  --fg-2: #2f2a27;
+  --linha: rgb(27 29 33 / 0.25);
+  --destaque: var(--c-carvao);
+  --destaque-texto: var(--c-carvao);
+  --sobre-destaque: var(--c-gelo);
+}
+
+.tom-escuro,
+.tom-claro,
+.tom-laranja {
+  background-color: var(--bg);
+  color: var(--fg);
+}

@@ -1,0 +1,135 @@
+---
+/**
+ * Botão da Metastorm.
+ * - variant="primary": fundo laranja com cantos chanfrados (ação principal).
+ * - variant="outline": contorno com a linha animada do botão original, que percorre a borda no hover.
+ * Com `href` vira link (<a>); sem `href` vira <button>.
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'outline';
+  size?: 'md' | 'sm';
+  type?: 'button' | 'submit';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'primary', size = 'md', type = 'button', class: extra = '', ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, extra].filter(Boolean).join(' ');
+---
+
+<Tag class={classes} href={href} type={href ? undefined : type} {...rest}>
+  {
+    variant === 'outline' && (
+      <svg class="btn__borda" aria-hidden="true" focusable="false">
+        <rect class="btn__trilho" x="0" y="0" width="100%" height="100%" />
+        <rect class="btn__linha" x="0" y="0" width="100%" height="100%" pathLength="100" />
+      </svg>
+    )
+  }
+  <span class="btn__texto"><slot /></span>
+</Tag>
+
+<style>
+  .btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.25rem;
+    padding-inline: 1.75rem;
+    border: 0;
+    background: none;
+    font-family: var(--f-display);
+    font-size: var(--t-base);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .btn--sm {
+    min-height: 2.5rem;
+    padding-inline: 1.125rem;
+    font-size: var(--t-sm);
+  }
+
+  /* ---------- Principal: fundo com cantos chanfrados ---------- */
+  /* O fundo fica num ::before para o contorno de foco (outline) não ser cortado pelo clip-path. */
+  .btn--primary {
+    color: var(--sobre-destaque);
+  }
+
+  .btn--primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--destaque);
+    clip-path: polygon(
+      var(--chanfro) 0,
+      100% 0,
+      100% calc(100% - var(--chanfro)),
+      calc(100% - var(--chanfro)) 100%,
+      0 100%,
+      0 var(--chanfro)
+    );
+    transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+
+  .btn--primary:hover::before {
+    background: var(--c-brasa);
+  }
+
+  .tom-laranja .btn--primary:hover::before {
+    background: var(--c-grafite);
+  }
+
+  .btn--primary:active::before {
+    transform: scale(0.97);
+  }
+
+  /* ---------- Contorno: linha que percorre a borda (efeito do botão original) ---------- */
+  .btn--outline {
+    color: var(--fg);
+  }
+
+  .btn__borda {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    pointer-events: none;
+  }
+
+  .btn__trilho {
+    stroke: var(--destaque);
+    stroke-width: 1px;
+    opacity: 0.55;
+  }
+
+  .btn__linha {
+    stroke: var(--destaque);
+    stroke-width: 3px;
+    stroke-dasharray: 18 82;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset var(--dur-lenta) var(--ease), stroke-dasharray var(--dur-lenta) var(--ease);
+  }
+
+  .btn--outline:hover .btn__linha,
+  .btn--outline:focus-visible .btn__linha {
+    stroke-dasharray: 100 0;
+    stroke-dashoffset: -100;
+  }
+
+  .btn--outline:hover {
+    color: var(--destaque-texto);
+  }
+</style>

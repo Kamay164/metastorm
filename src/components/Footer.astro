@@ -1,0 +1,71 @@
+---
+/** Rodapé: logo, direitos e créditos de desenvolvimento. */
+import logoBranco from '../assets/logo/logo-branco.svg';
+
+const base = import.meta.env.BASE_URL;
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape">
+  <div class="container rodape__grade">
+    <a class="rodape__logo" href={base} aria-label="Metastorm, página inicial">
+      <img src={logoBranco.src} width="160" height="25" alt="" loading="lazy" />
+    </a>
+
+    <p class="rodape__direitos">
+      © {ano} Metastorm. Todos os direitos reservados.<br />
+      Marca fictícia, criada para um projeto de portfólio.
+    </p>
+
+    <p class="rodape__credito">
+      Desenvolvido por
+      <a href="mailto:viniciuskamay123@gmail.com">Vinicius Kamay</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    border-top: 1px solid var(--c-aco);
+    background: var(--c-carvao);
+    color: var(--c-nevoa);
+    font-size: var(--t-sm);
+  }
+
+  .rodape__grade {
+    display: grid;
+    gap: var(--e-5);
+    padding-block: var(--e-7);
+  }
+
+  .rodape__logo {
+    display: inline-block;
+    justify-self: start;
+  }
+
+  .rodape__logo img {
+    width: 10rem;
+    height: auto;
+  }
+
+  .rodape__credito a {
+    color: var(--c-gelo);
+    font-weight: 500;
+  }
+
+  .rodape__credito a:hover {
+    color: var(--c-laranja);
+  }
+
+  @media (min-width: 768px) {
+    .rodape__grade {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--e-7);
+    }
+
+    .rodape__credito {
+      text-align: right;
+    }
+  }
+</style>

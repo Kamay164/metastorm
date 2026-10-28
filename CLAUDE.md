@@ -76,7 +76,7 @@ Metastorm/
 |---|-------|--------|
 | 0 | Preparação, linha de base e publicação inicial | ✅ (falta o 1º push do Vinicius) |
 | 1 | Otimização de mídia | ✅ (aguardando conferência do Vinicius) |
-| 2 | Design system e layout base | ⬜ |
+| 2 | Design system e layout base | ✅ (aguardando aprovação visual do Vinicius em `/design/`) |
 | 3 | Landing page — seções | ⬜ |
 | 4 | Vídeo da seção "Transmissões ao vivo" | ⬜ |
 | 5 | Telas visuais (Entrar, Criar conta, Painel) | ⬜ |
@@ -141,6 +141,17 @@ Metastorm/
 - Descrição, tópicos e link do site no repositório do GitHub (feito pelo Vinicius, com instruções).
 - **Concluída quando:** README completo e números finais registrados.
 
+## Design system (definido na Etapa 2) — seguir em todas as etapas
+- **Direção:** "transmissão de campeonato". Base escura (carvão), faixas claras e uma faixa laranja alternando, como no original.
+- **Assinatura visual (usar com parcimônia):** cantos chanfrados (`--chanfro`), como interface de jogo. Usada no botão principal e na barra do título de seção. Não espalhar em tudo.
+- **Tokens:** sempre usar as variáveis de `src/styles/tokens.css`, nunca cores ou tamanhos soltos.
+- **Tons de seção:** `class="tom-escuro" | "tom-claro" | "tom-laranja"` na `<section>`; os componentes se adaptam via `--bg`, `--fg`, `--fg-2`, `--linha`, `--destaque`, `--destaque-texto`, `--sobre-destaque`.
+- **Contraste:** texto sobre laranja é **escuro** (branco sobre `#F36422` não passa no AA). Em fundo claro, o laranja só aparece em detalhes; textos e links usam `--destaque-texto` (`#C2410C`).
+- **Tipografia:** Roboto Condensed 700 em títulos (h1/h2 em maiúsculas, como o original); Roboto 400/500/700 no texto. Escala fluida `--t-sm` … `--t-3xl`. Parágrafos com no máximo `--medida` (65ch).
+- **Componentes:** `BaseLayout` (head, fontes, pular para o conteúdo), `Header` (menu mobile acessível, abaixo de 768px), `Footer`, `Button` (`primary` | `outline`, `md` | `sm`; com `href` vira link), `SectionTitle` (`title`, `lead`, `id`, `level`, `align`).
+- **Movimento:** só em resposta à ação do usuário (hover, foco, abrir menu). Tudo desligado com `prefers-reduced-motion`.
+- **Página de teste:** `src/pages/design.astro` (`/design/`, com `noindex`). Remover ou manter fora do sitemap na Etapa 7.
+
 ## Critérios de conclusão do projeto
 - Lighthouse **Performance ≥ 90 (mobile) e ≥ 95 (desktop)**; Acessibilidade, Boas práticas e SEO ≥ 95.
 - LCP < 2,5 s (mobile, Lighthouse); CLS < 0,1.
@@ -168,8 +179,10 @@ Metastorm/
 ## Pendências / decisões em aberto
 - **Etapa 1 — mídia com marcas de terceiros:** as fotos `nivel-profissional.jpg` (patrocinadores visíveis), `jogos-videoame.jpg` e os cards do carrossel (arte de jogos) têm marcas de terceiros. Confirmar origem e licença antes de publicar em público; registrar em `CREDITS.md`.
 - **Etapa 1 — carrossel:** as 5 miniaturas são 133×160 px e ficam borradas em 200 px. Pedir versões maiores ao Vinicius, se ele tiver.
-- **Etapa 1 — `bg_branco.png`:** não foi copiado. No CSS original o caminho está errado e a imagem nunca aparece. Decidir na Etapa 2 se entra no design.
-- **Etapa 1 — logo:** versões SVG em `src/assets/logo/` (`logo-escuro.svg`, `logo-branco.svg`, `icone-branco.svg`). Usar nos componentes da Etapa 2.
+- **Etapa 2 — `bg_branco.png`:** decidido não usar (o tema novo é escuro e a imagem nunca apareceu no original).
+- **Etapa 1 — logo:** versões SVG em `src/assets/logo/` (`logo-escuro.svg`, `logo-branco.svg`, `icone-branco.svg`). O `logo-branco.svg` já está no Header e no Footer.
+- **Etapa 2 — link "Notícias":** aponta para `#noticias`, mas não existe seção de notícias no original. Decidir na Etapa 3: criar seção, apontar para outra seção ou remover.
+- **Etapa 2 — Entrar / Criar conta:** os links já apontam para `entrar/` e `criar-conta/`, que dão 404 até a Etapa 5.
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
 - Vídeo definitivo: Vinicius fornecerá? (até lá, usar provisório de licença livre).
 - Nome do repositório e URL final no GitHub Pages: preencher após o 1º push.
