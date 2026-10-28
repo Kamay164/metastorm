@@ -1,37 +1,152 @@
 ---
-// Página provisória (Etapa 0). Será substituída pela nova landing page na Etapa 3.
-const base = import.meta.env.BASE_URL;
+/** Página inicial (landing page). Textos e conteúdo vêm de src/data/. */
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import GameMarquee from '../components/GameMarquee.astro';
+import LevelCard from '../components/LevelCard.astro';
+import StepCard from '../components/StepCard.astro';
+import transmissao from '../assets/images/transmissao.jpg';
+import { jogos } from '../data/jogos';
+import { niveis } from '../data/niveis';
+import { etapas } from '../data/etapas';
 ---
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Metastorm — plataforma de torneios de e-Sports. Site em reconstrução." />
-    <link rel="icon" type="image/png" href={`${base}favicon.png`} />
-    <title>Metastorm — em reconstrução</title>
-    <style>
-      :root { color-scheme: dark; }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: #1b1d21;
-        color: #f8f8f8;
-        font-family: system-ui, sans-serif;
-        text-align: center;
-        padding: 1rem;
-      }
-      h1 { margin: 0; font-size: clamp(2rem, 8vw, 4rem); letter-spacing: 0.05em; }
-      span { color: #f36422; }
-      p { opacity: 0.8; }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>META<span>STORM</span></h1>
-      <p>Site em reconstrução.</p>
-    </main>
-  </body>
-</html>
+
+<BaseLayout
+  title="Metastorm"
+  description="Gerencie e participe de ligas e campeonatos dos seus jogos favoritos de e-Sports."
+>
+  <Hero />
+
+  <!-- Jogos: texto + carrossel infinito -->
+  <section class="secao tom-claro" aria-labelledby="titulo-jogos">
+    <div class="container jogos">
+      <SectionTitle
+        id="titulo-jogos"
+        title="Explore seu lado competitivo criando e participando de torneios de qualquer jogo"
+        caps={false}
+      />
+      <GameMarquee jogos={jogos} label="Jogos disponíveis para torneios" />
+    </div>
+  </section>
+
+  <!-- Níveis de competição -->
+  <section id="competicoes" class="secao tom-escuro" aria-labelledby="titulo-niveis">
+    <div class="container pilha">
+      <SectionTitle id="titulo-niveis" title="Competições para todos os níveis" />
+      <ul class="niveis" role="list">
+        {niveis.map((nivel) => <li><LevelCard nivel={nivel} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Etapas do torneio -->
+  <section id="etapas" class="secao tom-laranja" aria-labelledby="titulo-etapas">
+    <div class="container pilha">
+      <SectionTitle id="titulo-etapas" title="Cuidamos de todas as etapas" />
+      <ol class="etapas" role="list">
+        {etapas.map((etapa) => <StepCard titulo={etapa.titulo} texto={etapa.texto} />)}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Transmissões ao vivo (a imagem vira vídeo na Etapa 4) -->
+  <section id="ao-vivo" class="secao tom-claro" aria-labelledby="titulo-ao-vivo">
+    <div class="container pilha">
+      <SectionTitle
+        id="titulo-ao-vivo"
+        title="Torneios e transmissões ao vivo, uma combinação perfeita"
+        lead="Acompanhe as transmissões dos seus campeonatos pela nossa plataforma."
+        align="center"
+      />
+      <div class="palco">
+        <Picture
+          src={transmissao}
+          alt="Transmissão de uma partida de tiro em primeira pessoa, com o placar de UFSCar FIRE contra Pato E-sports"
+          formats={['avif', 'webp']}
+          widths={[640, 960, 1200]}
+          sizes="(min-width: 1024px) 64rem, 92vw"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pilha {
+    display: grid;
+    gap: var(--e-7);
+  }
+
+  /* ---------- Jogos ---------- */
+  .jogos {
+    display: grid;
+    gap: var(--e-7);
+    align-items: center;
+  }
+
+  /* ---------- Níveis ---------- */
+  .niveis {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--e-5);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ---------- Etapas ---------- */
+  .etapas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--e-5);
+    padding: 0;
+    list-style: none;
+    counter-reset: etapa;
+  }
+
+  /* ---------- Transmissões ---------- */
+  /* moldura laranja com cantos chanfrados: o padding vira a "borda" */
+  .palco {
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    padding: 0.3125rem;
+    background: var(--c-brasa);
+    clip-path: polygon(
+      1.5rem 0,
+      100% 0,
+      100% calc(100% - 1.5rem),
+      calc(100% - 1.5rem) 100%,
+      0 100%,
+      0 1.5rem
+    );
+  }
+
+  .palco :global(picture),
+  .palco :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 480px) {
+    .niveis,
+    .etapas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .jogos {
+      grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+      gap: var(--e-8);
+    }
+
+    .niveis,
+    .etapas {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

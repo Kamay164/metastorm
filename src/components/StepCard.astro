@@ -1,0 +1,57 @@
+---
+/**
+ * Cartão de etapa. Deve ficar dentro de uma <ol>: o número vem da ordem da lista (contador CSS),
+ * porque as etapas são uma sequência (inscrição → comunicação → partidas → divulgação).
+ */
+interface Props {
+  titulo: string;
+  texto: string;
+}
+
+const { titulo, texto } = Astro.props;
+---
+
+<li class="etapa">
+  <h3 class="etapa__titulo">{titulo}</h3>
+  <p class="etapa__texto">{texto}</p>
+</li>
+
+<style>
+  .etapa {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--e-3);
+    padding: var(--e-6) var(--e-5) var(--e-6);
+    background: var(--c-gelo);
+    color: var(--c-carvao);
+    clip-path: polygon(
+      var(--chanfro) 0,
+      100% 0,
+      100% calc(100% - var(--chanfro)),
+      calc(100% - var(--chanfro)) 100%,
+      0 100%,
+      0 var(--chanfro)
+    );
+  }
+
+  /* número da etapa, vindo do contador da lista */
+  .etapa::before {
+    content: counter(etapa);
+    counter-increment: etapa;
+    font-family: var(--f-display);
+    font-size: var(--t-3xl);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--c-laranja-texto);
+  }
+
+  .etapa__titulo {
+    font-size: var(--t-xl);
+  }
+
+  .etapa__texto {
+    color: var(--c-chumbo);
+    font-size: var(--t-base);
+  }
+</style>

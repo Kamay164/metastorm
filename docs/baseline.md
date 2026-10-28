@@ -74,3 +74,17 @@ Imagens usadas pelo site. As que não aparecem no código (`pn2Img1-4`, `nova_hu
 **Favicon:** `favicon.svg` (fundo escuro, marca branca), `favicon.png` (32 px) e `apple-touch-icon.png` (180 px). O antigo tinha 14×11 px.
 
 **Atenção:** as miniaturas do carrossel (133×160 px) são exibidas em 200 px, então ficam levemente borradas. Para melhorar, precisa de versões maiores dessas imagens.
+
+## Etapa 3 — landing page nova (medição local, Lighthouse 13.6)
+
+| Métrica | Original (celular) | Novo (celular) | Original (desktop) | Novo (desktop) |
+|---|---|---|---|---|
+| Performance | 97 | **100** | 79 | **100** |
+| Acessibilidade | 82 | **100** | 82 | **100** |
+| Boas práticas | 92 | **100** | 92 | **100** |
+| SEO | 91 | **100** | 91 | **100** |
+| LCP | 1,4 s | 1,7 s | 4,0 s | **0,4 s** |
+| CLS | 0 | 0,001 | 0 | 0,001 |
+| Peso carregado | 13,7 MB | **182 KB** | 13,7 MB | **228 KB** |
+
+O peso inicial caiu cerca de **75 vezes**. As notas de Performance foram medidas em localhost, então a medição definitiva (rede real, PageSpeed Insights) fica para a Etapa 7. O LCP do celular subiu um pouco porque o Lighthouse simula uma rede lenta e agora a foto do topo é de fato a maior imagem carregada, mas continua abaixo de 2,5 s.

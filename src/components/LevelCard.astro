@@ -1,0 +1,83 @@
+---
+/** Cartão de nível de competição: foto com cantos chanfrados e o nome sobre um degradê. */
+import { Picture } from 'astro:assets';
+import type { Nivel } from '../data/niveis';
+
+interface Props {
+  nivel: Nivel;
+}
+
+const { nivel } = Astro.props;
+---
+
+<article class="nivel">
+  <Picture
+    src={nivel.imagem}
+    alt={nivel.alt}
+    formats={['avif', 'webp']}
+    widths={[320, 480, 640]}
+    sizes="(min-width: 1024px) 18rem, (min-width: 480px) 45vw, 92vw"
+    loading="lazy"
+    style={nivel.posicao ? `object-position:${nivel.posicao}` : undefined}
+  />
+  <h3 class="nivel__nome">{nivel.nome}</h3>
+</article>
+
+<style>
+  .nivel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: var(--c-grafite);
+    clip-path: polygon(
+      var(--chanfro) 0,
+      100% 0,
+      100% calc(100% - var(--chanfro)),
+      calc(100% - var(--chanfro)) 100%,
+      0 100%,
+      0 var(--chanfro)
+    );
+  }
+
+  .nivel :global(picture),
+  .nivel :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .nivel :global(img) {
+    object-fit: cover;
+  }
+
+  /* degradê que garante a leitura do nome sobre qualquer foto */
+  .nivel::after {
+    content: '';
+    position: absolute;
+    inset: 45% 0 0;
+    z-index: 1;
+    background: linear-gradient(to top, rgb(27 29 33 / 0.92), transparent);
+  }
+
+  .nivel__nome {
+    position: absolute;
+    left: var(--e-5);
+    right: var(--e-5);
+    bottom: var(--e-4);
+    z-index: 2;
+    color: var(--c-gelo);
+    font-size: var(--t-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .nivel__nome::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 0.25rem;
+    margin-bottom: var(--e-2);
+    background: var(--c-laranja);
+  }
+</style>

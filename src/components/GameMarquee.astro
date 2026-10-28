@@ -1,0 +1,104 @@
+---
+/**
+ * Carrossel infinito de jogos, só com CSS (sem JavaScript).
+ * A lista aparece duas vezes: a cópia fica escondida de leitores de tela, e a faixa anda metade
+ * da sua largura em loop, o que emenda sem salto.
+ * Pausa ao passar o mouse ou focar com o teclado. Com "reduzir movimento" ligado, vira uma
+ * lista parada que rola na horizontal.
+ */
+import { Image } from 'astro:assets';
+import type { Jogo } from '../data/jogos';
+
+interface Props {
+  jogos: Jogo[];
+  label: string;
+}
+
+const { jogos, label } = Astro.props;
+const copias = [false, true];
+---
+
+<div class="marquee" role="group" aria-label={label}>
+  <div class="marquee__faixa">
+    {
+      copias.map((copia) => (
+        <ul class="marquee__lista" role="list" aria-hidden={copia ? 'true' : undefined}>
+          {jogos.map((jogo) => (
+            <li class="marquee__item">
+              <Image
+                src={jogo.imagem}
+                alt={copia ? '' : `Capa de ${jogo.nome}`}
+                width={jogo.imagem.width}
+                height={jogo.imagem.height}
+                densities={[1, 2]}
+                loading="lazy"
+              />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    --marquee-gap: var(--e-4);
+    overflow: hidden;
+    /* esmaece as bordas para a faixa "entrar e sair" suavemente */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee__faixa {
+    display: flex;
+    width: max-content;
+    animation: marquee-andar 28s linear infinite;
+  }
+
+  .marquee:hover .marquee__faixa,
+  .marquee:focus-within .marquee__faixa {
+    animation-play-state: paused;
+  }
+
+  .marquee__lista {
+    display: flex;
+    gap: var(--marquee-gap);
+    padding: 0 var(--marquee-gap) 0 0;
+    list-style: none;
+  }
+
+  .marquee__item {
+    flex: none;
+  }
+
+  .marquee__item :global(img) {
+    width: 8.3rem;
+    height: auto;
+    aspect-ratio: 133 / 160;
+    object-fit: cover;
+    border-radius: 0.25rem;
+  }
+
+  @keyframes marquee-andar {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .marquee__faixa {
+      animation: none;
+    }
+
+    .marquee__lista[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

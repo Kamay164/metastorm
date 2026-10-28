@@ -77,7 +77,7 @@ Metastorm/
 | 0 | Preparação, linha de base e publicação inicial | ✅ (falta o 1º push do Vinicius) |
 | 1 | Otimização de mídia | ✅ (aguardando conferência do Vinicius) |
 | 2 | Design system e layout base | ✅ (aguardando aprovação visual do Vinicius em `/design/`) |
-| 3 | Landing page — seções | ⬜ |
+| 3 | Landing page — seções | ✅ (aguardando aprovação visual do Vinicius na home) |
 | 4 | Vídeo da seção "Transmissões ao vivo" | ⬜ |
 | 5 | Telas visuais (Entrar, Criar conta, Painel) | ⬜ |
 | 6 | Animações, acessibilidade e SEO | ⬜ |
@@ -181,7 +181,9 @@ Metastorm/
 - **Etapa 1 — carrossel:** as 5 miniaturas são 133×160 px e ficam borradas em 200 px. Pedir versões maiores ao Vinicius, se ele tiver.
 - **Etapa 2 — `bg_branco.png`:** decidido não usar (o tema novo é escuro e a imagem nunca apareceu no original).
 - **Etapa 1 — logo:** versões SVG em `src/assets/logo/` (`logo-escuro.svg`, `logo-branco.svg`, `icone-branco.svg`). O `logo-branco.svg` já está no Header e no Footer.
-- **Etapa 2 — link "Notícias":** aponta para `#noticias`, mas não existe seção de notícias no original. Decidir na Etapa 3: criar seção, apontar para outra seção ou remover.
+- **Etapa 3 — menu:** o link "Notícias" foi trocado por âncoras das seções reais (Competições, Etapas, Ao vivo), porque o original não tem notícias e não vamos inventar conteúdo. Se o Vinicius quiser Notícias, criar a seção com textos fornecidos por ele.
+- **Etapa 3 — foto do topo:** o PNG original tinha 14 linhas transparentes embaixo (cortadas) e é muito escura; a página aplica `filter: brightness(1.5)` e um véu só no lado do texto. Se trocar a foto, revisar o véu em `Hero.astro`.
+- **Etapa 3 — seção "Ao vivo":** a imagem `transmissao.jpg` está dentro de `.palco` em `src/pages/index.astro`. A Etapa 4 troca a imagem pelo vídeo (a imagem vira o `poster`).
 - **Etapa 2 — Entrar / Criar conta:** os links já apontam para `entrar/` e `criar-conta/`, que dão 404 até a Etapa 5.
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
 - Vídeo definitivo: Vinicius fornecerá? (até lá, usar provisório de licença livre).

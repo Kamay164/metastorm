@@ -1,6 +1,9 @@
 // Links do cabeçalho. `path` é relativo à raiz do site (o BASE_URL é somado nos componentes).
+// Apontam para as seções da página inicial.
 export const navLinks = [
-  { label: 'Notícias', path: '#noticias' },
+  { label: 'Competições', path: '#competicoes' },
+  { label: 'Etapas', path: '#etapas' },
+  { label: 'Ao vivo', path: '#ao-vivo' },
 ] as const;
 
 export const navActions = {

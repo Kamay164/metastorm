@@ -1,0 +1,112 @@
+---
+/**
+ * Topo da página: foto de fundo, título, frase de apoio e botões.
+ * A foto é a primeira coisa que o navegador precisa carregar (LCP), por isso vem com
+ * loading="eager" e fetchpriority="high".
+ */
+import { Picture } from 'astro:assets';
+import heroImg from '../assets/images/hero-painel.webp';
+import Button from './Button.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="hero tom-escuro" aria-labelledby="titulo-hero">
+  <Picture
+    class="hero__foto"
+    src={heroImg}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 1024, 1440, 1920]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    pictureAttributes={{ class: 'hero__picture' }}
+  />
+  <div class="hero__veu" aria-hidden="true"></div>
+
+  <div class="container hero__conteudo">
+    <span class="hero__barra" aria-hidden="true"></span>
+    <h1 id="titulo-hero">Explore seu lado pro-player</h1>
+    <p class="hero__texto">
+      Gerencie e participe de ligas e campeonatos dos seus jogos favoritos de e-Sports.
+    </p>
+    <div class="hero__acoes">
+      <Button href={`${base}criar-conta/`}>Criar conta</Button>
+      <Button href={`${base}entrar/`} variant="outline">Entrar</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: min(85vh, 46rem);
+    padding-block: var(--e-8);
+    overflow: hidden;
+  }
+
+  .hero :global(.hero__picture) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .hero :global(.hero__foto) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 50%;
+    /* a foto original é muito escura (brilho médio ~10%); clareia um pouco para ela aparecer */
+    filter: brightness(1.5) contrast(1.05);
+  }
+
+  /* véu: escurece só o lado do texto, para o título ler bem, e deixa a foto aparecer à direita */
+  .hero__veu {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to right, rgb(27 29 33 / 0.9) 0%, rgb(27 29 33 / 0.55) 45%, rgb(27 29 33 / 0) 100%);
+  }
+
+  .hero__conteudo {
+    display: grid;
+    gap: var(--e-5);
+    justify-items: start;
+  }
+
+  .hero__barra {
+    width: 4.5rem;
+    height: 0.5rem;
+    background: var(--c-laranja);
+    clip-path: polygon(0.5rem 0, 100% 0, calc(100% - 0.5rem) 100%, 0 100%);
+  }
+
+  .hero h1 {
+    max-width: 14ch;
+  }
+
+  .hero__texto {
+    max-width: 32ch;
+    color: var(--c-gelo);
+    font-size: var(--t-xl);
+    line-height: 1.35;
+  }
+
+  .hero__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--e-4);
+    margin-top: var(--e-3);
+  }
+
+  @media (max-width: 767.98px) {
+    /* no celular o texto ocupa a largura toda, então o véu cobre a foto inteira */
+    .hero__veu {
+      background: linear-gradient(to top, rgb(27 29 33 / 0.88), rgb(27 29 33 / 0.6));
+    }
+  }
+</style>
