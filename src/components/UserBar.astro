@@ -1,6 +1,8 @@
 ---
 /**
  * Barra do usuário logado (baseada na pasta BarraNav do site original).
+ * Desktop (≥ 1024px): logo, links, moedas e "Sair" numa linha só, como no original.
+ * Celular/tablet: logo + moedas em cima e os links numa faixa que rola na horizontal (só ela, não a página).
  * Demonstração: os itens levam às seções do painel, nada vem de um servidor.
  */
 import logoBranco from '../assets/logo/logo-branco.svg';
@@ -11,22 +13,25 @@ const base = import.meta.env.BASE_URL;
 ---
 
 <header class="barra">
-  <div class="container barra__topo">
+  <div class="container barra__grade">
     <a class="barra__logo" href={`${base}painel/`} aria-label="Metastorm, painel">
       <img src={logoBranco.src} width="160" height="25" alt="" />
     </a>
+
+    <nav class="barra__nav" aria-label="Painel">
+      <ul class="barra__links" role="list">
+        {painelLinks.map((l) => <li><a href={`#${l.id}`}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
     <p class="barra__moedas">
       <img src={moeda.src} width="20" height="20" alt="" />
       <span class="sr-only">Moedas:</span>
       <span>{usuario.moedas}</span>
     </p>
+
     <a class="barra__sair" href={base}>Sair</a>
   </div>
-  <nav class="barra__nav" aria-label="Painel">
-    <ul class="container barra__links" role="list">
-      {painelLinks.map((l) => <li><a href={`#${l.id}`}>{l.label}</a></li>)}
-    </ul>
-  </nav>
 </header>
 
 <style>
@@ -38,11 +43,19 @@ const base = import.meta.env.BASE_URL;
     border-bottom: 1px solid var(--c-aco);
   }
 
-  .barra__topo {
-    display: flex;
+  .barra__grade {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas:
+      'logo . moedas sair'
+      'nav nav nav nav';
     align-items: center;
-    gap: var(--e-4);
-    min-height: 3.5rem;
+    column-gap: var(--e-4);
+  }
+
+  .barra__logo {
+    grid-area: logo;
+    padding-block: var(--e-3);
   }
 
   .barra__logo img {
@@ -51,18 +64,20 @@ const base = import.meta.env.BASE_URL;
   }
 
   .barra__moedas {
+    grid-area: moedas;
     display: inline-flex;
     align-items: center;
     gap: var(--e-2);
-    margin-left: auto;
     padding: var(--e-1) var(--e-3);
     border: 1px solid var(--c-aco);
     color: var(--c-gelo);
     font-weight: 700;
     font-size: var(--t-sm);
+    white-space: nowrap;
   }
 
   .barra__sair {
+    grid-area: sair;
     color: var(--c-nevoa);
     font-size: var(--t-sm);
   }
@@ -73,6 +88,8 @@ const base = import.meta.env.BASE_URL;
 
   /* links numa faixa rolável só nela mesma, para caber em 360px sem rolar a página */
   .barra__nav {
+    grid-area: nav;
+    min-width: 0;
     border-top: 1px solid var(--c-aco);
     overflow-x: auto;
     scrollbar-width: none;
@@ -81,8 +98,6 @@ const base = import.meta.env.BASE_URL;
   .barra__links {
     display: flex;
     gap: var(--e-5);
-    padding-block: 0;
-    list-style: none;
     white-space: nowrap;
   }
 
@@ -105,10 +120,24 @@ const base = import.meta.env.BASE_URL;
     border-bottom-color: var(--c-laranja);
   }
 
-  @media (min-width: 768px) {
-    .barra__topo {
-      /* em telas maiores, logo + links + moedas ficam na mesma linha */
-      min-height: 4rem;
+  @media (min-width: 1024px) {
+    .barra__grade {
+      grid-template-columns: auto 1fr auto auto;
+      grid-template-areas: 'logo nav moedas sair';
+      column-gap: var(--e-6);
+      min-height: 4.25rem;
+    }
+
+    .barra__nav {
+      border-top: 0;
+    }
+
+    .barra__links {
+      justify-content: center;
+    }
+
+    .barra__links a {
+      min-height: 4.25rem;
     }
   }
 </style>

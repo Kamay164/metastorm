@@ -30,23 +30,39 @@ Medido em 28/10/2026 com Lighthouse 13.6, servindo o site original numa máquina
 
 Só esses 5 arquivos somam ~13,7 MB, quase o peso total da página.
 
-## Medição real (PageSpeed Insights) — preencher após a 1ª publicação
+## Medição real (PageSpeed Insights) — preencher após a publicação
 
-| Métrica | Original (`/legacy/`) celular | Original desktop |
+Como medir (grátis, sem login): abra https://pagespeed.web.dev, cole a URL, clique em "Analisar" e anote as notas de **Celular** e de **Computador**. Faça nas duas páginas abaixo, de preferência 2 ou 3 vezes (os números variam um pouco) e anote a mediana.
+
+| Página | Celular: Desempenho / LCP | Desktop: Desempenho / LCP |
 |---|---|---|
-| Performance | | |
-| LCP | | |
+| Original (`/legacy/`) | | |
+| Novo (home) | | |
+| Novo (`/entrar/`) | | |
 
-## Depois (preencher na Etapa 7)
+## Depois — Etapa 7 (medição local, Lighthouse 13.6, site servido em `/Metastorm/` como no GitHub Pages)
 
-| Métrica | Novo site celular | Novo site desktop |
-|---|---|---|
-| Performance | | |
-| Acessibilidade | | |
-| Boas práticas | | |
-| SEO | | |
-| LCP | | |
-| Peso inicial | | |
+| Métrica | Original celular | **Novo celular** | Original desktop | **Novo desktop** |
+|---|---|---|---|---|
+| Performance | 97 | **100** | 79 | **100** |
+| Acessibilidade | 82 | **100** | 82 | **100** |
+| Boas práticas | 92 | **100** | 92 | **100** |
+| SEO | 91 | **100** | 91 | **100** |
+| LCP | 1,4 s | **1,1 s** | 4,0 s | **0,5 s** |
+| CLS | 0 | 0,001 | 0 | 0,001 |
+| Peso inicial da home | 13,7 MB | **~231 KB** | 13,7 MB | **~216 KB** |
+
+Valores da home. Entrar e Criar conta: 100 em tudo (LCP 0,8–0,9 s no celular, ~148 KB). Painel: 100 / 100 / 100 / 66 (o SEO menor vem só do `noindex` proposital).
+O peso foi medido sem compressão (servidor de teste); no GitHub Pages, com gzip, o HTML, o CSS e o JS ficam ainda menores. A medição com rede real (PageSpeed Insights) fica para a Etapa 8.
+
+**Outras verificações da Etapa 7**
+- Validador oficial do W3C (Nu HTML Checker): **0 erros** nas 5 páginas. Restam só avisos de `role="list"` em `<ul>`/`<ol>`, que é proposital (o Safari tira a semântica de lista quando o CSS remove os marcadores).
+- Links: 76 verificados, nenhum quebrado.
+- Largura: em 360, 768, 1024, 1440 e 1920 px nenhum elemento passa da borda da tela (medido elemento por elemento, porque o `overflow-x: clip` do `body` esconderia a sobra numa medição só da rolagem).
+- axe-core 4 (WCAG 2.2 AA): 0 violações nas 4 páginas.
+- Console: 0 erros nas 4 páginas (390 e 1440 px). Nenhuma requisição com erro.
+- Vídeo: não é baixado no carregamento inicial.
+- O `/legacy/` continua com os erros do original (404 do `bg_branco.png`), de propósito: ele não é editado.
 
 ## Etapa 1 — otimização de mídia (antes × depois)
 
@@ -123,4 +139,26 @@ O SEO de 63 no painel é esperado: a página tem `noindex` de propósito (é dem
 - **Teclado:** todos os itens recebem foco visível, na ordem da página (pular para o conteúdo → logo → menu → botões → vídeo → rodapé).
 - **Reduzir movimento:** todos os elementos animados ficam visíveis desde o início.
 - O SEO 66 do painel vem só do `noindex` proposital.
+
+### Revisão independente (Etapa 7) — achados e correções
+
+Um revisor separado, sem o histórico da implementação, comparou o projeto com o `CLAUDE.md`. Achados e o que foi feito:
+
+| # | Gravidade | Achado | Correção |
+|---|---|---|---|
+| 1 | Alta | Home de 360 a 1023 px: título dos jogos cortado e página ~1500 px de largura (a coluna da grade esticava até a faixa do carrossel; regressão da Etapa 6) | `grid-template-columns: minmax(0, 1fr)` em `.jogos` e `min-width: 0` no bloco do carrossel |
+| 2 | Média | Senha visível passava por baixo do botão "Ocultar" | espaço do botão por classe fixa (`campo__input--senha`), não por `[type=password]` |
+| 3 | Média | Links da barra do painel sem margem lateral | barra refeita em grade: no desktop numa linha só (como o original), no celular alinhada ao conteúdo |
+| 4 | Média | Imagem lateral de Entrar/Criar conta borrada (foto horizontal esticada num painel vertical) | trocada por composição vetorial: marca do controle + "Explore seu lado pro-player", sem foto |
+| 5 | Média | Carrossel sem como pausar por teclado/toque (WCAG 2.2.2) | botão "Pausar animação" / "Retomar animação" |
+| 6 | Baixa | `aria-pressed` junto com troca de texto; dois botões "Mostrar" iguais | `aria-pressed` removido; nomes "Mostrar senha" / "Mostrar confirmar senha" |
+| 7 | Baixa | "Inscrever-se" do painel perdia o foco e não era anunciado | `aria-disabled`, aviso em `aria-live` e nome do torneio via `aria-describedby` |
+| 8 | Baixa | Código morto e comentários desatualizados | removidos/corrigidos |
+| 9 | Baixa | Cores soltas no código | novos tokens `--c-erro`, `--laranja-suave`, `--carvao-rgb`, `--gelo-rgb`, `--laranja-rgb` |
+| 10 | Baixa | Ordem do painel diferente da barra | igualada (Torneios, Clãs, Notícias, Loja, Perfil) |
+| 11 | Baixa | Dica e erro repetidos no campo | a dica some enquanto o erro aparece |
+| 12 | Baixa | Rodapé apertado em 768 px | 3 colunas só a partir de 1024 px |
+| 13 | Baixa | Cabeçalho não marcava a página atual | `aria-current="page"` com borda completa e sublinhado no botão |
+
+Também corrigido pelas checagens automáticas: `pathLength` em `<rect>` (SVG 2, reprovado no validador W3C) trocado por `<path>` no botão de contorno; `<script>` do painel que ficava fora do `</html>`.
 

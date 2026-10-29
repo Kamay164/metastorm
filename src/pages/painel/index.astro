@@ -33,17 +33,20 @@ import { usuario, resumo, torneios, cla } from '../../data/painel';
       <section id="torneios" aria-labelledby="t-torneios">
         <SectionTitle id="t-torneios" title="Próximos torneios" level={2} />
         <ul class="torneios" role="list">
-          {torneios.map((t) => (
+          {torneios.map((t, i) => (
             <li class="torneio">
               <div>
                 <p class="torneio__jogo">{t.jogo} · {t.nivel}</p>
-                <h3>{t.nome}</h3>
+                <h3 id={`torneio-${i}`}>{t.nome}</h3>
                 <p class="torneio__info">{t.data} · {t.vagas}</p>
               </div>
-              <Button variant="outline" size="sm" type="button" data-demo-botao>Inscrever-se</Button>
+              <Button variant="outline" size="sm" type="button" data-demo-botao aria-describedby={`torneio-${i}`}>
+                Inscrever-se
+              </Button>
             </li>
           ))}
         </ul>
+        <p class="sr-only" aria-live="polite" data-demo-aviso></p>
       </section>
 
       <div class="duas">
@@ -52,13 +55,6 @@ import { usuario, resumo, torneios, cla } from '../../data/painel';
           <h3>{cla.nome}</h3>
           <p class="mudo">{cla.membros} membros</p>
           <p>{cla.descricao}</p>
-        </section>
-
-        <section id="perfil" class="cartao" aria-labelledby="t-perfil">
-          <SectionTitle id="t-perfil" title="Perfil" level={2} />
-          <h3>{usuario.nome}</h3>
-          <p class="mudo">Nível {usuario.nivel}</p>
-          <p>{usuario.moedas} moedas disponíveis.</p>
         </section>
 
         <section id="noticias" class="cartao" aria-labelledby="t-noticias">
@@ -70,21 +66,34 @@ import { usuario, resumo, torneios, cla } from '../../data/painel';
           <SectionTitle id="t-loja" title="Loja" level={2} />
           <p class="mudo">A loja não está disponível nesta demonstração.</p>
         </section>
+
+        <section id="perfil" class="cartao" aria-labelledby="t-perfil">
+          <SectionTitle id="t-perfil" title="Perfil" level={2} />
+          <h3>{usuario.nome}</h3>
+          <p class="mudo">Nível {usuario.nivel}</p>
+          <p>{usuario.moedas} moedas disponíveis.</p>
+        </section>
       </div>
     </div>
   </div>
+
+  <script>
+    // Botões de demonstração: só avisam, não salvam nada.
+    // aria-disabled (e não disabled) para o foco continuar no botão; o aviso é lido pelo leitor de tela.
+    const aviso = document.querySelector<HTMLElement>('[data-demo-aviso]');
+    document.querySelectorAll<HTMLButtonElement>('[data-demo-botao]').forEach((b) => {
+      b.addEventListener('click', () => {
+        if (b.getAttribute('aria-disabled') === 'true') return;
+        const texto = b.querySelector('.btn__texto');
+        if (texto) texto.textContent = 'Só na demonstração';
+        b.setAttribute('aria-disabled', 'true');
+        if (aviso) aviso.textContent = 'Inscrição indisponível: este painel é só uma demonstração.';
+      });
+    });
+  </script>
 </BaseLayout>
 
-<script>
-  // Botões de demonstração: só avisam, não salvam nada.
-  document.querySelectorAll<HTMLButtonElement>('[data-demo-botao]').forEach((b) => {
-    b.addEventListener('click', () => {
-      const texto = b.querySelector('.btn__texto');
-      if (texto) texto.textContent = 'Só na demonstração';
-      b.disabled = true;
-    });
-  });
-</script>
+
 
 <style>
   .painel {
@@ -104,7 +113,7 @@ import { usuario, resumo, torneios, cla } from '../../data/painel';
   .painel__aviso {
     padding: var(--e-3) var(--e-4);
     border-left: 4px solid var(--c-laranja);
-    background: rgb(243 100 34 / 0.1);
+    background: var(--laranja-suave);
     font-size: var(--t-sm);
   }
 
@@ -162,6 +171,11 @@ import { usuario, resumo, torneios, cla } from '../../data/painel';
     padding: var(--e-4) var(--e-5);
     background: var(--c-grafite);
     border: 1px solid var(--c-aco);
+  }
+
+  .torneio :global(.btn[aria-disabled='true']) {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 
   .torneio h3 {

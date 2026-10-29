@@ -3,8 +3,7 @@
  * Moldura das telas Entrar e Criar conta: cartão com o formulário + painel visual ao lado (desktop).
  * Demonstração: o formulário valida no navegador e leva ao painel, sem enviar nem salvar nada.
  */
-import { Image } from 'astro:assets';
-import heroImg from '../assets/images/hero-painel.webp';
+import iconeBranco from '../assets/logo/icone-branco.svg';
 import SectionTitle from './SectionTitle.astro';
 
 interface Props {
@@ -41,8 +40,10 @@ const base = import.meta.env.BASE_URL;
       <div class="auth__rodape"><slot name="rodape" /></div>
     </div>
 
+    <!-- Painel decorativo (só desktop): marca vetorial, nítida em qualquer tamanho e sem peso de foto -->
     <div class="auth__visual" aria-hidden="true">
-      <Image src={heroImg} alt="" widths={[640, 960]} sizes="(min-width: 1024px) 40vw, 0px" loading="lazy" />
+      <img class="auth__marca" src={iconeBranco.src} width="250" height="250" alt="" />
+      <p class="auth__slogan">Explore seu lado pro-player</p>
     </div>
   </div>
 </section>
@@ -53,7 +54,6 @@ const base = import.meta.env.BASE_URL;
     email: 'Digite um e-mail válido, como nome@exemplo.com.',
     curto: (n: number) => `Use pelo menos ${n} caracteres.`,
     igual: 'Os valores não são iguais.',
-    marcar: 'Marque esta opção para continuar.',
   };
 
   document.querySelectorAll<HTMLFormElement>('[data-demo-form]').forEach((form) => {
@@ -61,7 +61,6 @@ const base = import.meta.env.BASE_URL;
 
     const erroDe = (input: HTMLInputElement): string => {
       const v = input.value.trim();
-      if (input.type === 'checkbox') return input.checked ? '' : mensagens.marcar;
       if (input.required && !v) return mensagens.vazio;
       if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return mensagens.email;
       const min = Number(input.getAttribute('minlength') || 0);
@@ -84,7 +83,6 @@ const base = import.meta.env.BASE_URL;
     campos.forEach((c) => {
       c.addEventListener('blur', () => c.value && validar(c));
       c.addEventListener('input', () => c.getAttribute('aria-invalid') === 'true' && validar(c));
-      c.addEventListener('change', () => c.type === 'checkbox' && validar(c));
     });
 
     form.querySelectorAll<HTMLButtonElement>('[data-mostrar]').forEach((b) => {
@@ -93,8 +91,8 @@ const base = import.meta.env.BASE_URL;
         if (!alvo) return;
         const mostrar = alvo.type === 'password';
         alvo.type = mostrar ? 'text' : 'password';
-        b.textContent = mostrar ? 'Ocultar' : 'Mostrar';
-        b.setAttribute('aria-pressed', String(mostrar));
+        const texto = b.querySelector('[data-mostrar-texto]');
+        if (texto) texto.textContent = mostrar ? 'Ocultar' : 'Mostrar';
       });
     });
 
@@ -140,7 +138,7 @@ const base = import.meta.env.BASE_URL;
   .auth__aviso {
     padding: var(--e-3) var(--e-4);
     border-left: 4px solid var(--c-laranja);
-    background: rgb(243 100 34 / 0.1);
+    background: var(--laranja-suave);
     color: var(--c-gelo);
     font-size: var(--t-sm);
   }
@@ -177,15 +175,40 @@ const base = import.meta.env.BASE_URL;
     display: none;
     position: relative;
     overflow: hidden;
+    place-content: center;
+    justify-items: center;
+    gap: var(--e-5);
+    padding: var(--e-7);
+    background:
+      radial-gradient(circle at 70% 25%, rgb(var(--laranja-rgb) / 0.3), transparent 60%),
+      linear-gradient(160deg, var(--c-grafite), var(--c-carvao));
+    border: 1px solid var(--c-aco);
     clip-path: polygon(2rem 0, 100% 0, 100% calc(100% - 2rem), calc(100% - 2rem) 100%, 0 100%, 0 2rem);
   }
 
-  .auth__visual :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 70% 50%;
-    filter: brightness(1.5) contrast(1.05);
+  /* listras diagonais discretas, como uma tela de HUD */
+  .auth__visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg, rgb(var(--gelo-rgb) / 0.03) 0 2px, transparent 2px 14px);
+  }
+
+  .auth__marca {
+    position: relative;
+    width: min(16rem, 60%);
+    height: auto;
+  }
+
+  .auth__slogan {
+    position: relative;
+    font-family: var(--f-display);
+    font-size: var(--t-2xl);
+    font-weight: 700;
+    line-height: var(--lh-titulo);
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--c-gelo);
   }
 
   @media (min-width: 480px) {
@@ -201,7 +224,7 @@ const base = import.meta.env.BASE_URL;
     }
 
     .auth__visual {
-      display: block;
+      display: grid;
     }
   }
 </style>

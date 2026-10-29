@@ -1,8 +1,8 @@
 ---
 /**
- * Campo de formulário: rótulo visível, dica, e área da mensagem de erro.
+ * Campo de formulário: rótulo visível, mensagem de erro e dica.
  * Sem `name` de propósito: é demonstração, nada deve ser enviado.
- * A validação fica em src/scripts/demo-form.ts (usa data-campo / data-erro).
+ * A validação fica no script do AuthShell.astro (usa o id `<campo>-erro`).
  */
 interface Props {
   id: string;
@@ -19,11 +19,12 @@ const { id, label, type = 'text', hint, autocomplete, required = true, minlength
 const descr = [hint ? `${id}-dica` : null, `${id}-erro`].filter(Boolean).join(' ');
 ---
 
-<div class="campo" data-campo>
+<div class="campo">
   <label for={id}>{label}</label>
   <div class="campo__caixa">
     <input
       id={id}
+      class:list={[{ 'campo__input--senha': type === 'password' }]}
       type={type}
       required={required}
       minlength={minlength}
@@ -35,14 +36,15 @@ const descr = [hint ? `${id}-dica` : null, `${id}-erro`].filter(Boolean).join(' 
     />
     {
       type === 'password' && (
-        <button class="campo__olho" type="button" data-mostrar aria-controls={id} aria-pressed="false">
-          Mostrar
+        <button class="campo__olho" type="button" data-mostrar aria-controls={id}>
+          <span data-mostrar-texto>Mostrar</span>
+          <span class="sr-only"> {label.toLowerCase()}</span>
         </button>
       )
     }
   </div>
+  <p class="campo__erro" id={`${id}-erro`}></p>
   {hint && <p class="campo__dica" id={`${id}-dica`}>{hint}</p>}
-  <p class="campo__erro" id={`${id}-erro`} data-erro></p>
 </div>
 
 <style>
@@ -72,7 +74,8 @@ const descr = [hint ? `${id}-dica` : null, `${id}-erro`].filter(Boolean).join(' 
     transition: border-color var(--dur) var(--ease);
   }
 
-  input[type='password'] {
+  /* classe fixa (e não [type=password]): ao clicar em "Mostrar" o tipo vira text e o espaço do botão precisa continuar */
+  .campo__input--senha {
     padding-right: 5.5rem;
   }
 
@@ -87,7 +90,7 @@ const descr = [hint ? `${id}-dica` : null, `${id}-erro`].filter(Boolean).join(' 
   }
 
   input[aria-invalid='true'] {
-    border-color: #ff8a80;
+    border-color: var(--c-erro);
   }
 
   .campo__olho {
@@ -113,14 +116,18 @@ const descr = [hint ? `${id}-dica` : null, `${id}-erro`].filter(Boolean).join(' 
     font-size: var(--t-sm);
   }
 
-  /* #ff8a80 sobre o carvão: contraste 7:1 */
   .campo__erro {
-    color: #ff8a80;
+    color: var(--c-erro);
     font-size: var(--t-sm);
     font-weight: 500;
   }
 
   .campo__erro:empty {
+    display: none;
+  }
+
+  /* com o erro visível, a dica repetiria a mesma informação */
+  .campo__erro:not(:empty) + .campo__dica {
     display: none;
   }
 </style>

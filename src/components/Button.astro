@@ -22,9 +22,10 @@ const classes = ['btn', `btn--${variant}`, `btn--${size}`, extra].filter(Boolean
 <Tag class={classes} href={href} type={href ? undefined : type} {...rest}>
   {
     variant === 'outline' && (
-      <svg class="btn__borda" aria-hidden="true" focusable="false">
-        <rect class="btn__trilho" x="0" y="0" width="100%" height="100%" />
-        <rect class="btn__linha" x="0" y="0" width="100%" height="100%" pathLength="100" />
+      <svg class="btn__borda" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        {/* path em vez de rect: pathLength em <rect> é SVG 2 e não passa no validador W3C */}
+        <path class="btn__trilho" d="M0 0H100V100H0Z" vector-effect="non-scaling-stroke" />
+        <path class="btn__linha" d="M0 0H100V100H0Z" pathLength="100" vector-effect="non-scaling-stroke" />
       </svg>
     )
   }
@@ -118,7 +119,7 @@ const classes = ['btn', `btn--${variant}`, `btn--${size}`, extra].filter(Boolean
   .btn__linha {
     stroke: var(--destaque);
     stroke-width: 3px;
-    stroke-dasharray: 18 82;
+    stroke-dasharray: 12 88;
     stroke-dashoffset: 0;
     transition: stroke-dashoffset var(--dur-lenta) var(--ease), stroke-dasharray var(--dur-lenta) var(--ease);
   }
@@ -127,6 +128,17 @@ const classes = ['btn', `btn--${variant}`, `btn--${size}`, extra].filter(Boolean
   .btn--outline:focus-visible .btn__linha {
     stroke-dasharray: 100 0;
     stroke-dashoffset: -100;
+  }
+
+  /* página atual (aria-current="page"): borda completa e texto sublinhado */
+  .btn--outline[aria-current='page'] .btn__linha {
+    stroke-dasharray: 100 0;
+  }
+
+  .btn[aria-current='page'] .btn__texto {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
   }
 
   .btn--outline:hover {

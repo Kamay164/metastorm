@@ -76,7 +76,6 @@ const poster = await getImage({ src: posterImg, format: 'webp', width: 1024, qua
     const mostrarEstado = () => {
       const tocando = !video.paused;
       raiz.toggleAttribute('data-tocando', tocando);
-      botao.setAttribute('aria-pressed', String(!tocando));
       texto.textContent = tocando ? 'Pausar vídeo' : 'Reproduzir vídeo';
     };
 
@@ -145,8 +144,8 @@ const poster = await getImage({ src: posterImg, format: 'webp', width: 1024, qua
     gap: var(--e-2);
     min-height: 2.5rem;
     padding: 0 var(--e-4) 0 var(--e-3);
-    border: 1px solid rgb(248 248 248 / 0.35);
-    background: rgb(27 29 33 / 0.8);
+    border: 1px solid rgb(var(--gelo-rgb) / 0.35);
+    background: rgb(var(--carvao-rgb) / 0.8);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     color: var(--c-gelo);
@@ -161,7 +160,7 @@ const poster = await getImage({ src: posterImg, format: 'webp', width: 1024, qua
   }
 
   .video__controle:hover {
-    background: rgb(27 29 33 / 0.95);
+    background: rgb(var(--carvao-rgb) / 0.95);
   }
 
   /* ícone: triângulo (reproduzir) ou duas barras (pausar), feito só com CSS */

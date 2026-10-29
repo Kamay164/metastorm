@@ -3,8 +3,9 @@
  * Carrossel infinito de jogos, só com CSS (sem JavaScript).
  * A lista aparece duas vezes: a cópia fica escondida de leitores de tela, e a faixa anda metade
  * da sua largura em loop, o que emenda sem salto.
- * Pausa ao passar o mouse ou focar com o teclado. Com "reduzir movimento" ligado, vira uma
- * lista parada que rola na horizontal.
+ * Pausa ao passar o mouse e tem um botão "Pausar animação" (teclado, toque e leitor de tela;
+ * WCAG 2.2.2). Com "reduzir movimento" ligado, vira uma lista parada que rola na horizontal
+ * e o botão some. Sem JavaScript o botão também some (não haveria o que controlar).
  */
 import { Image } from 'astro:assets';
 import type { Jogo } from '../data/jogos';
@@ -18,7 +19,8 @@ const { jogos, label } = Astro.props;
 const copias = [false, true];
 ---
 
-<div class="marquee" role="group" aria-label={label}>
+<div class="marquee-bloco">
+<div class="marquee" role="group" aria-label={label} data-marquee>
   <div class="marquee__faixa">
     {
       copias.map((copia) => (
@@ -40,6 +42,27 @@ const copias = [false, true];
     }
   </div>
 </div>
+<button class="marquee__controle" type="button" data-marquee-controle hidden>
+  <span class="marquee__icone" aria-hidden="true"></span>
+  <span data-marquee-texto>Pausar animação</span>
+</button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.marquee-bloco').forEach((bloco) => {
+    const faixa = bloco.querySelector<HTMLElement>('[data-marquee]');
+    const botao = bloco.querySelector<HTMLButtonElement>('[data-marquee-controle]');
+    const texto = bloco.querySelector<HTMLElement>('[data-marquee-texto]');
+    if (!faixa || !botao || !texto) return;
+    botao.hidden = false;
+    botao.addEventListener('click', () => {
+      const pausar = !faixa.hasAttribute('data-pausado');
+      faixa.toggleAttribute('data-pausado', pausar);
+      bloco.toggleAttribute('data-pausado', pausar);
+      texto.textContent = pausar ? 'Retomar animação' : 'Pausar animação';
+    });
+  });
+</script>
 
 <style>
   .marquee {
@@ -56,9 +79,51 @@ const copias = [false, true];
     animation: marquee-andar 28s linear infinite;
   }
 
+  .marquee-bloco {
+    display: grid;
+    gap: var(--e-3);
+    min-width: 0;
+  }
+
   .marquee:hover .marquee__faixa,
-  .marquee:focus-within .marquee__faixa {
+  .marquee[data-pausado] .marquee__faixa {
     animation-play-state: paused;
+  }
+
+  .marquee__controle {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-2);
+    min-height: 2.5rem;
+    padding: 0 var(--e-3);
+    border: 1px solid var(--linha);
+    background: transparent;
+    color: var(--fg-2);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .marquee__controle[hidden] {
+    display: none;
+  }
+
+  .marquee__controle:hover {
+    color: var(--fg);
+    border-color: var(--fg-2);
+  }
+
+  /* ícone: duas barras (pausar) ou triângulo (retomar), só com CSS */
+  .marquee__icone {
+    width: 0.625rem;
+    height: 0.625rem;
+    background: currentColor;
+    clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0);
+  }
+
+  .marquee-bloco[data-pausado] .marquee__icone {
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
   }
 
   .marquee__lista {
@@ -97,7 +162,8 @@ const copias = [false, true];
       animation: none;
     }
 
-    .marquee__lista[aria-hidden='true'] {
+    .marquee__lista[aria-hidden='true'],
+    .marquee__controle {
       display: none;
     }
   }

@@ -81,8 +81,8 @@ Metastorm/
 | 4 | Vídeo da seção "Transmissões ao vivo" | ✅ (vídeo do Vinicius aplicado; aguardando conferência no site publicado) |
 | 5 | Telas visuais (Entrar, Criar conta, Painel) | ✅ (aguardando conferência no site publicado) |
 | 6 | Animações, acessibilidade e SEO | ✅ (aguardando conferência no site publicado) |
-| 7 | Revisão final de qualidade | ⬜ |
-| 8 | Finalização (README, medição final, repositório) | ⬜ |
+| 7 | Revisão final de qualidade | ✅ (aguardando conferência no site publicado) |
+| 8 | Finalização (README, medição final, repositório) | ✅ (README pronto; falta o Vinicius preencher URL e medição real) |
 
 ### Etapa 0 — Preparação, linha de base e publicação inicial
 - Original copiado para `public/legacy/` sem alterações; `.gitignore`; projeto Astro mínimo (Astro 7.3.8) com página provisória "em reconstrução".
@@ -149,6 +149,9 @@ Metastorm/
 - **Contraste:** texto sobre laranja é **escuro** (branco sobre `#F36422` não passa no AA). Em fundo claro, o laranja só aparece em detalhes; textos e links usam `--destaque-texto` (`#C2410C`).
 - **Tipografia:** Roboto Condensed 700 em títulos (h1/h2 em maiúsculas, como o original); Roboto 400/500/700 no texto. Escala fluida `--t-sm` … `--t-3xl`. Parágrafos com no máximo `--medida` (65ch).
 - **Componentes:** `BaseLayout` (head, fontes, pular para o conteúdo), `Header` (menu mobile acessível, abaixo de 768px), `Footer`, `Button` (`primary` | `outline`, `md` | `sm`; com `href` vira link), `SectionTitle` (`title`, `lead`, `id`, `level`, `align`).
+- **Carrossel de jogos:** tem botão "Pausar animação" (WCAG 2.2.2); some com reduzir movimento e sem JS.
+- **Cores com transparência:** usar `rgb(var(--carvao-rgb) / α)`, `--gelo-rgb`, `--laranja-rgb`; erro = `--c-erro`; fundo de aviso = `--laranja-suave`.
+- **Grades com conteúdo largo** (carrossel, faixas roláveis): sempre `minmax(0, 1fr)` / `min-width: 0`, senão a coluna estica e corta o texto. Testar largura elemento por elemento (o `overflow-x: clip` do body esconde a sobra).
 - **Movimento:** hover/foco/menu + entrada ao rolar com `data-revelar` (opacidade e deslocamento; `--atraso` escalona listas; script no `BaseLayout`, CSS em `global.css`). Nunca no topo da página (LCP). Tudo desligado com `prefers-reduced-motion` e sem JS fica tudo visível.
 - **Página de teste:** `src/pages/design.astro` (`/design/`, com `noindex`). Remover ou manter fora do sitemap na Etapa 7.
 
@@ -188,6 +191,9 @@ Metastorm/
 - **Etapa 4 — não testado:** reprodução no Firefox e no Safari/iPhone (o ambiente só tem Chromium). O Vinicius deve conferir no site publicado; WebM é a 1ª fonte e o MP4 é o plano B.
 - **Etapa 5 — telas:** `/entrar/`, `/criar-conta/` e `/painel/` prontas. Formulários sem atributo `name` (nada é serializado), validação própria em português, ao validar levam ao painel sem enviar/salvar nada. O painel tem `noindex` de propósito (por isso o SEO do Lighthouse nele é 63; as demais páginas dão 100). Conteúdo fictício em `src/data/painel.ts` (torneios, clã, números): revisar/aprovar com o Vinicius. Notícias e Loja são só placeholders. Não há checkbox de termos (não existem termos de uso).
 - **Etapa 6 — SEO:** Open Graph + `twitter:card` + `canonical` no `BaseLayout` (imagem `public/og.jpg`, 1200×630, gerada a partir da foto do topo). Sitemap em `src/pages/sitemap.xml.ts` (sem dependência nova), só com home, entrar e criar-conta. Sem `robots.txt`: num site de projeto (`usuario.github.io/repositorio/`) os buscadores só leem o robots da raiz do domínio, então o arquivo seria ignorado; para indexar, enviar o sitemap no Google Search Console.
+- **Etapa 7 — revisão:** feita por um revisor separado, sem o histórico da implementação. 13 achados, todos corrigidos (lista em `docs/baseline.md`). Validador W3C: 0 erros (só avisos de `role="list"`, propositais). Links, console, largura 360–1920 e axe: ok.
+- **Etapa 7 — telas de acesso:** a foto lateral de Entrar/Criar conta foi trocada por uma composição vetorial (marca + slogan), porque a foto horizontal ficava borrada no painel vertical.
+- **Etapa 7 — não testado:** Firefox e Safari/iPhone (o ambiente só tem Chromium). Conferir no site publicado.
 - **Etapa 6 — exceção ao critério SEO ≥ 95:** o `/painel/` dá 66 no SEO só por causa do `noindex` proposital (demonstração). Aguardando aprovação do Vinicius para manter assim.
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
-- Nome do repositório e URL final no GitHub Pages: preencher após o 1º push.
+- **Etapa 8 — pendente do Vinicius:** (1) trocar `SEU-USUARIO`/`SEU-REPOSITORIO` no `README.md` pela URL real; (2) medir no PageSpeed Insights e preencher a tabela em `docs/baseline.md`; (3) descrição, tópicos e link do site no GitHub; (4) resolver os ⚠️ do `CREDITS.md` antes de divulgar.

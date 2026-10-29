@@ -76,6 +76,8 @@ import { etapas } from '../data/etapas';
   /* ---------- Jogos ---------- */
   .jogos {
     display: grid;
+    /* minmax(0, …): sem isso a coluna estica até a largura da faixa do carrossel e corta o título */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--e-7);
     align-items: center;
   }

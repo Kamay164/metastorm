@@ -16,6 +16,11 @@
   --c-nevoa: #a9adb5;          /* texto secundário no escuro (7,5:1) */
   --c-gelo: #f8f8f8;           /* texto no escuro / fundo claro */
   --c-chumbo: #5a5f69;         /* texto secundário no claro (6:1) */
+  --c-erro: #ff8a80;           /* mensagens de erro no escuro (≥ 6,6:1 sobre carvão e grafite) */
+  --laranja-suave: rgb(243 100 34 / 0.1); /* fundo de avisos */
+  --carvao-rgb: 27 29 33;      /* para véus: rgb(var(--carvao-rgb) / 0.8) */
+  --gelo-rgb: 248 248 248;
+  --laranja-rgb: 243 100 34;
 
   /* ---------- Tipografia ---------- */
   --f-display: 'Roboto Condensed', 'Arial Narrow', sans-serif;
@@ -93,7 +98,7 @@
   --bg: var(--c-laranja);
   --fg: var(--c-carvao);
   --fg-2: #2f2a27;
-  --linha: rgb(27 29 33 / 0.25);
+  --linha: rgb(var(--carvao-rgb) / 0.25);
   --destaque: var(--c-carvao);
   --destaque-texto: var(--c-carvao);
   --sobre-destaque: var(--c-gelo);
