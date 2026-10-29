@@ -78,7 +78,7 @@ Metastorm/
 | 1 | Otimização de mídia | ✅ (aguardando conferência do Vinicius) |
 | 2 | Design system e layout base | ✅ (aguardando aprovação visual do Vinicius em `/design/`) |
 | 3 | Landing page — seções | ✅ (aguardando aprovação visual do Vinicius na home) |
-| 4 | Vídeo da seção "Transmissões ao vivo" | ⬜ |
+| 4 | Vídeo da seção "Transmissões ao vivo" | ✅ (vídeo do Vinicius aplicado; aguardando conferência no site publicado) |
 | 5 | Telas visuais (Entrar, Criar conta, Painel) | ⬜ |
 | 6 | Animações, acessibilidade e SEO | ⬜ |
 | 7 | Revisão final de qualidade | ⬜ |
@@ -183,8 +183,9 @@ Metastorm/
 - **Etapa 1 — logo:** versões SVG em `src/assets/logo/` (`logo-escuro.svg`, `logo-branco.svg`, `icone-branco.svg`). O `logo-branco.svg` já está no Header e no Footer.
 - **Etapa 3 — menu:** o link "Notícias" foi trocado por âncoras das seções reais (Competições, Etapas, Ao vivo), porque o original não tem notícias e não vamos inventar conteúdo. Se o Vinicius quiser Notícias, criar a seção com textos fornecidos por ele.
 - **Etapa 3 — foto do topo:** o PNG original tinha 14 linhas transparentes embaixo (cortadas) e é muito escura; a página aplica `filter: brightness(1.5)` e um véu só no lado do texto. Se trocar a foto, revisar o véu em `Hero.astro`.
-- **Etapa 3 — seção "Ao vivo":** a imagem `transmissao.jpg` está dentro de `.palco` em `src/pages/index.astro`. A Etapa 4 troca a imagem pelo vídeo (a imagem vira o `poster`).
+- **Etapa 4 — vídeo:** trecho 0:22–0:38 do `Download.mp4` enviado pelo Vinicius (repost no TikTok de @thelastclipscsgo da transmissão do IEM Rio Major 2022). Marca d'água do TikTok mantida de propósito (não remover). ⚠️ Não é licença livre: registrado no `CREDITS.md`; para divulgação pública, sugerir gameplay gravada pelo próprio Vinicius. Ele pediu "como um gif": mantido em vídeo porque o GIF teria 19,5 MB contra ~1,4 MB (ver `docs/video.md`).
+- **Etapa 4 — decisão técnica:** o `<video>` NÃO usa o atributo `autoplay`. O `LiveVideo.astro` toca e pausa por visibilidade (IntersectionObserver), baixa o poster só perto da tela e tem botão pausar/reproduzir (acessibilidade). Respeita `prefers-reduced-motion` e `saveData`.
+- **Etapa 4 — não testado:** reprodução no Firefox e no Safari/iPhone (o ambiente só tem Chromium). O Vinicius deve conferir no site publicado; WebM é a 1ª fonte e o MP4 é o plano B.
 - **Etapa 2 — Entrar / Criar conta:** os links já apontam para `entrar/` e `criar-conta/`, que dão 404 até a Etapa 5.
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
-- Vídeo definitivo: Vinicius fornecerá? (até lá, usar provisório de licença livre).
 - Nome do repositório e URL final no GitHub Pages: preencher após o 1º push.

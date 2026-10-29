@@ -1,0 +1,178 @@
+---
+/**
+ * Vídeo da seção "Transmissões ao vivo": mudo, em loop, sem entrar no carregamento inicial.
+ *
+ * - O arquivo só começa a baixar quando o vídeo aparece na tela (e para quando sai).
+ * - Sem JavaScript, "reduzir movimento" ligado ou economia de dados: fica só a imagem de capa (poster),
+ *   que também só é baixada quando o vídeo está perto da tela.
+ * - Botão para pausar/reproduzir, para quem não quer movimento na página.
+ *
+ * Arquivos: public/video/live.webm e public/video/live.mp4 (ver docs/video.md).
+ */
+import { getImage } from 'astro:assets';
+import posterImg from '../assets/images/live-poster.jpg';
+
+interface Props {
+  /** Descrição curta do que o vídeo mostra, para leitores de tela. */
+  label: string;
+}
+
+const { label } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const poster = await getImage({ src: posterImg, format: 'webp', width: 1024, quality: 80 });
+---
+
+<div class="video" data-live-video data-poster={poster.src}>
+  <video
+    class="video__midia"
+    muted
+    loop
+    playsinline
+    preload="none"
+    width="1024"
+    height="576"
+    aria-label={label}
+  >
+    <source src={`${base}video/live.webm`} type="video/webm" />
+    <source src={`${base}video/live.mp4`} type="video/mp4" />
+  </video>
+
+  <!-- Sem JavaScript o poster não é aplicado pelo script, então entra como imagem comum -->
+  <noscript>
+    <img class="video__reserva" src={poster.src} width="1024" height="576" alt="" />
+  </noscript>
+
+  <button class="video__controle" type="button" data-controle hidden>
+    <span class="video__icone" aria-hidden="true"></span>
+    <span data-controle-texto>Pausar vídeo</span>
+  </button>
+</div>
+
+<script>
+  const reduzMovimento = matchMedia('(prefers-reduced-motion: reduce)');
+  const conexao = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const economiaDeDados = Boolean(conexao?.saveData);
+
+  document.querySelectorAll<HTMLElement>('[data-live-video]').forEach((raiz) => {
+    const video = raiz.querySelector<HTMLVideoElement>('video');
+    const botao = raiz.querySelector<HTMLButtonElement>('[data-controle]');
+    const texto = raiz.querySelector<HTMLElement>('[data-controle-texto]');
+    if (!video || !botao || !texto) return;
+
+    // A pessoa só "decide" ao clicar no botão; antes disso valem a visibilidade e as preferências do sistema.
+    // O poster só é baixado quando o vídeo está a ~1 tela de distância: fica fora do carregamento inicial.
+    new IntersectionObserver(
+      ([entrada], observador) => {
+        if (!entrada.isIntersecting) return;
+        video.poster = raiz.dataset.poster ?? '';
+        observador.disconnect();
+      },
+      { rootMargin: '600px 0px' },
+    ).observe(raiz);
+
+    let escolhaManual: 'tocar' | 'pausar' | null = null;
+    let visivel = false;
+
+    const mostrarEstado = () => {
+      const tocando = !video.paused;
+      raiz.toggleAttribute('data-tocando', tocando);
+      botao.setAttribute('aria-pressed', String(!tocando));
+      texto.textContent = tocando ? 'Pausar vídeo' : 'Reproduzir vídeo';
+    };
+
+    const tocar = () => video.play().catch(() => mostrarEstado()); // o navegador pode recusar (ex.: economia de bateria)
+
+    const atualizar = () => {
+      const queroTocar =
+        escolhaManual === 'tocar' ||
+        (escolhaManual === null && visivel && !reduzMovimento.matches && !economiaDeDados);
+      if (queroTocar && video.paused) tocar();
+      if (!queroTocar && !video.paused) video.pause();
+    };
+
+    video.addEventListener('play', mostrarEstado);
+    video.addEventListener('pause', mostrarEstado);
+
+    botao.hidden = false; // sem JS o botão não aparece, porque não há nada para controlar
+    mostrarEstado();
+
+    botao.addEventListener('click', () => {
+      escolhaManual = video.paused ? 'tocar' : 'pausar';
+      atualizar();
+    });
+
+    reduzMovimento.addEventListener('change', atualizar);
+
+    new IntersectionObserver(
+      ([entrada]) => {
+        visivel = entrada.isIntersecting;
+        atualizar();
+      },
+      { threshold: 0.3 },
+    ).observe(raiz);
+  });
+</script>
+
+<style>
+  .video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--c-carvao);
+  }
+
+  .video__reserva {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video__midia {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* no canto inferior esquerdo, que não tem chanfro na moldura */
+  .video__controle {
+    position: absolute;
+    left: var(--e-3);
+    bottom: var(--e-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-2);
+    min-height: 2.5rem;
+    padding: 0 var(--e-4) 0 var(--e-3);
+    border: 1px solid rgb(248 248 248 / 0.35);
+    background: rgb(27 29 33 / 0.8);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: var(--c-gelo);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  /* o display acima venceria o atributo hidden; sem JS o botão não faz nada, então fica escondido */
+  .video__controle[hidden] {
+    display: none;
+  }
+
+  .video__controle:hover {
+    background: rgb(27 29 33 / 0.95);
+  }
+
+  /* ícone: triângulo (reproduzir) ou duas barras (pausar), feito só com CSS */
+  .video__icone {
+    width: 0.75rem;
+    height: 0.75rem;
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  [data-tocando] .video__icone {
+    clip-path: polygon(0 0, 35% 0, 35% 100%, 0 100%, 0 0, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 0);
+  }
+</style>

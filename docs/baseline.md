@@ -88,3 +88,14 @@ Imagens usadas pelo site. As que não aparecem no código (`pn2Img1-4`, `nova_hu
 | Peso carregado | 13,7 MB | **182 KB** | 13,7 MB | **228 KB** |
 
 O peso inicial caiu cerca de **75 vezes**. As notas de Performance foram medidas em localhost, então a medição definitiva (rede real, PageSpeed Insights) fica para a Etapa 7. O LCP do celular subiu um pouco porque o Lighthouse simula uma rede lenta e agora a foto do topo é de fato a maior imagem carregada, mas continua abaixo de 2,5 s.
+
+## Etapa 4 — vídeo na seção "Transmissões ao vivo" (medição local)
+
+| Item | Resultado |
+|---|---|
+| Vídeo (15 s de gameplay, 1024×576, 30 fps, sem áudio) | WebM 1,3 MB · MP4 1,4 MB (como GIF seriam 19,5 MB) |
+| Peso da home no carregamento (celular) | **182 KB** (o vídeo e o poster não entram) |
+| Lighthouse (celular / desktop) | **100 / 100** em Desempenho, Acessibilidade, Boas práticas e SEO |
+| LCP | 1,7 s (celular) · 0,4 s (desktop) |
+
+Ao primeiro teste, o poster do vídeo (abaixo da dobra) foi baixado junto com a página e o peso subiu para 273 KB, com LCP de 2,4 s no celular. Passei a baixar o poster só quando o vídeo está perto da tela, e os números voltaram ao normal.

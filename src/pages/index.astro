@@ -1,13 +1,12 @@
 ---
 /** Página inicial (landing page). Textos e conteúdo vêm de src/data/. */
-import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import GameMarquee from '../components/GameMarquee.astro';
 import LevelCard from '../components/LevelCard.astro';
 import StepCard from '../components/StepCard.astro';
-import transmissao from '../assets/images/transmissao.jpg';
+import LiveVideo from '../components/LiveVideo.astro';
 import { jogos } from '../data/jogos';
 import { niveis } from '../data/niveis';
 import { etapas } from '../data/etapas';
@@ -51,7 +50,7 @@ import { etapas } from '../data/etapas';
     </div>
   </section>
 
-  <!-- Transmissões ao vivo (a imagem vira vídeo na Etapa 4) -->
+  <!-- Transmissões ao vivo: vídeo mudo em loop -->
   <section id="ao-vivo" class="secao tom-claro" aria-labelledby="titulo-ao-vivo">
     <div class="container pilha">
       <SectionTitle
@@ -61,14 +60,7 @@ import { etapas } from '../data/etapas';
         align="center"
       />
       <div class="palco">
-        <Picture
-          src={transmissao}
-          alt="Transmissão de uma partida de tiro em primeira pessoa, com o placar de UFSCar FIRE contra Pato E-sports"
-          formats={['avif', 'webp']}
-          widths={[640, 960, 1200]}
-          sizes="(min-width: 1024px) 64rem, 92vw"
-          loading="lazy"
-        />
+        <LiveVideo label="Trecho de gameplay de CS:GO da transmissão do IEM Rio Major 2022, em vídeo mudo e em loop" />
       </div>
     </div>
   </section>
@@ -122,13 +114,6 @@ import { etapas } from '../data/etapas';
       0 100%,
       0 1.5rem
     );
-  }
-
-  .palco :global(picture),
-  .palco :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
   }
 
   @media (min-width: 480px) {
