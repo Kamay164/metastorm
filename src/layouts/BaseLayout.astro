@@ -11,14 +11,17 @@ import '../styles/tokens.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import UserBar from '../components/UserBar.astro';
 
 interface Props {
   title: string;
   description: string;
   noindex?: boolean;
+  /** true = área do usuário (painel): troca o cabeçalho público pela barra do usuário. */
+  app?: boolean;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const { title, description, noindex = false, app = false } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const fullTitle = title === 'Metastorm' ? title : `${title} | Metastorm`;
 ---
@@ -40,7 +43,7 @@ const fullTitle = title === 'Metastorm' ? title : `${title} | Metastorm`;
   </head>
   <body>
     <a class="pular" href="#conteudo">Pular para o conteúdo</a>
-    <Header />
+    {app ? <UserBar /> : <Header />}
     <main id="conteudo">
       <slot />
     </main>

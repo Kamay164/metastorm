@@ -1,0 +1,190 @@
+---
+/** Painel do usuário (demonstração): conteúdo fictício de src/data/painel.ts. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import Button from '../../components/Button.astro';
+import { usuario, resumo, torneios, cla } from '../../data/painel';
+---
+
+<BaseLayout
+  title="Painel"
+  description="Painel de demonstração da Metastorm, com dados fictícios."
+  noindex
+  app
+>
+  <div class="painel tom-escuro">
+    <div class="container painel__corpo">
+      <p class="painel__aviso" role="note">
+        <strong>Painel de demonstração.</strong> Todos os dados desta página são fictícios.
+      </p>
+
+      <header class="boas-vindas">
+        <SectionTitle title={`Olá, ${usuario.nome}`} lead={`Nível ${usuario.nivel}. Veja o que está acontecendo nos seus torneios.`} level={1} />
+        <ul class="resumo" role="list">
+          {resumo.map((r) => (
+            <li>
+              <span class="resumo__valor">{r.valor}</span>
+              <span class="resumo__rotulo">{r.rotulo}</span>
+            </li>
+          ))}
+        </ul>
+      </header>
+
+      <section id="torneios" aria-labelledby="t-torneios">
+        <SectionTitle id="t-torneios" title="Próximos torneios" level={2} />
+        <ul class="torneios" role="list">
+          {torneios.map((t) => (
+            <li class="torneio">
+              <div>
+                <p class="torneio__jogo">{t.jogo} · {t.nivel}</p>
+                <h3>{t.nome}</h3>
+                <p class="torneio__info">{t.data} · {t.vagas}</p>
+              </div>
+              <Button variant="outline" size="sm" type="button" data-demo-botao>Inscrever-se</Button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="duas">
+        <section id="clas" class="cartao" aria-labelledby="t-clas">
+          <SectionTitle id="t-clas" title="Meu clã" level={2} />
+          <h3>{cla.nome}</h3>
+          <p class="mudo">{cla.membros} membros</p>
+          <p>{cla.descricao}</p>
+        </section>
+
+        <section id="perfil" class="cartao" aria-labelledby="t-perfil">
+          <SectionTitle id="t-perfil" title="Perfil" level={2} />
+          <h3>{usuario.nome}</h3>
+          <p class="mudo">Nível {usuario.nivel}</p>
+          <p>{usuario.moedas} moedas disponíveis.</p>
+        </section>
+
+        <section id="noticias" class="cartao" aria-labelledby="t-noticias">
+          <SectionTitle id="t-noticias" title="Notícias" level={2} />
+          <p class="mudo">Nenhuma notícia nesta demonstração.</p>
+        </section>
+
+        <section id="loja" class="cartao" aria-labelledby="t-loja">
+          <SectionTitle id="t-loja" title="Loja" level={2} />
+          <p class="mudo">A loja não está disponível nesta demonstração.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Botões de demonstração: só avisam, não salvam nada.
+  document.querySelectorAll<HTMLButtonElement>('[data-demo-botao]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const texto = b.querySelector('.btn__texto');
+      if (texto) texto.textContent = 'Só na demonstração';
+      b.disabled = true;
+    });
+  });
+</script>
+
+<style>
+  .painel {
+    padding-block: var(--e-6) var(--e-secao);
+  }
+
+  .painel__corpo {
+    display: grid;
+    gap: var(--e-7);
+  }
+
+  /* barra fixa no topo: as âncoras não podem ficar escondidas atrás dela */
+  section[id] {
+    scroll-margin-top: 7rem;
+  }
+
+  .painel__aviso {
+    padding: var(--e-3) var(--e-4);
+    border-left: 4px solid var(--c-laranja);
+    background: rgb(243 100 34 / 0.1);
+    font-size: var(--t-sm);
+  }
+
+  .boas-vindas {
+    display: grid;
+    gap: var(--e-5);
+  }
+
+  .resumo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--e-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .resumo li {
+    display: grid;
+    gap: var(--e-1);
+    padding: var(--e-4);
+    background: var(--c-grafite);
+    border: 1px solid var(--c-aco);
+  }
+
+  .resumo__valor {
+    font-family: var(--f-display);
+    font-size: var(--t-2xl);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--c-laranja);
+  }
+
+  .resumo__rotulo,
+  .mudo,
+  .torneio__info,
+  .torneio__jogo {
+    color: var(--c-nevoa);
+    font-size: var(--t-sm);
+  }
+
+  .torneios {
+    display: grid;
+    gap: var(--e-3);
+    margin-top: var(--e-5);
+    padding: 0;
+    list-style: none;
+  }
+
+  .torneio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-4);
+    padding: var(--e-4) var(--e-5);
+    background: var(--c-grafite);
+    border: 1px solid var(--c-aco);
+  }
+
+  .torneio h3 {
+    font-size: var(--t-lg);
+  }
+
+  .duas {
+    display: grid;
+    gap: var(--e-5);
+  }
+
+  .cartao {
+    display: grid;
+    gap: var(--e-3);
+    align-content: start;
+    padding: var(--e-5);
+    background: var(--c-grafite);
+    border: 1px solid var(--c-aco);
+  }
+
+  @media (min-width: 768px) {
+    .duas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+/** Tela de cadastro (demonstração, sem back-end). */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthShell from '../../components/AuthShell.astro';
+import Field from '../../components/Field.astro';
+import Button from '../../components/Button.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Criar conta" description="Crie sua conta Metastorm (tela de demonstração).">
+  <AuthShell
+    formId="form-criar-conta"
+    titulo="Criar conta"
+    texto="Monte seu time e entre nos torneios dos seus jogos favoritos."
+    destino="painel/"
+  >
+    <Field id="usuario" label="Nome de usuário" autocomplete="username" minlength={3} hint="Pelo menos 3 caracteres." />
+    <Field id="email" label="E-mail" type="email" autocomplete="email" />
+    <Field id="senha" label="Senha" type="password" autocomplete="new-password" minlength={8} hint="Pelo menos 8 caracteres." />
+    <Field id="senha2" label="Confirmar senha" type="password" autocomplete="new-password" igualA="senha" />
+    <Button slot="acao" type="submit">Criar conta</Button>
+    <p slot="rodape">Já tem conta? <a href={`${base}entrar/`}>Entrar</a></p>
+  </AuthShell>
+</BaseLayout>

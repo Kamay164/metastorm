@@ -1,0 +1,114 @@
+---
+/**
+ * Barra do usuário logado (baseada na pasta BarraNav do site original).
+ * Demonstração: os itens levam às seções do painel, nada vem de um servidor.
+ */
+import logoBranco from '../assets/logo/logo-branco.svg';
+import moeda from '../assets/images/moeda.webp';
+import { painelLinks, usuario } from '../data/painel';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<header class="barra">
+  <div class="container barra__topo">
+    <a class="barra__logo" href={`${base}painel/`} aria-label="Metastorm, painel">
+      <img src={logoBranco.src} width="160" height="25" alt="" />
+    </a>
+    <p class="barra__moedas">
+      <img src={moeda.src} width="20" height="20" alt="" />
+      <span class="sr-only">Moedas:</span>
+      <span>{usuario.moedas}</span>
+    </p>
+    <a class="barra__sair" href={base}>Sair</a>
+  </div>
+  <nav class="barra__nav" aria-label="Painel">
+    <ul class="container barra__links" role="list">
+      {painelLinks.map((l) => <li><a href={`#${l.id}`}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .barra {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--c-carvao);
+    border-bottom: 1px solid var(--c-aco);
+  }
+
+  .barra__topo {
+    display: flex;
+    align-items: center;
+    gap: var(--e-4);
+    min-height: 3.5rem;
+  }
+
+  .barra__logo img {
+    width: 8.5rem;
+    height: auto;
+  }
+
+  .barra__moedas {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-2);
+    margin-left: auto;
+    padding: var(--e-1) var(--e-3);
+    border: 1px solid var(--c-aco);
+    color: var(--c-gelo);
+    font-weight: 700;
+    font-size: var(--t-sm);
+  }
+
+  .barra__sair {
+    color: var(--c-nevoa);
+    font-size: var(--t-sm);
+  }
+
+  .barra__sair:hover {
+    color: var(--c-gelo);
+  }
+
+  /* links numa faixa rolável só nela mesma, para caber em 360px sem rolar a página */
+  .barra__nav {
+    border-top: 1px solid var(--c-aco);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .barra__links {
+    display: flex;
+    gap: var(--e-5);
+    padding-block: 0;
+    list-style: none;
+    white-space: nowrap;
+  }
+
+  .barra__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--f-display);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-gelo);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .barra__links a:hover {
+    color: var(--c-laranja);
+    border-bottom-color: var(--c-laranja);
+  }
+
+  @media (min-width: 768px) {
+    .barra__topo {
+      /* em telas maiores, logo + links + moedas ficam na mesma linha */
+      min-height: 4rem;
+    }
+  }
+</style>

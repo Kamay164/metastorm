@@ -79,7 +79,7 @@ Metastorm/
 | 2 | Design system e layout base | ✅ (aguardando aprovação visual do Vinicius em `/design/`) |
 | 3 | Landing page — seções | ✅ (aguardando aprovação visual do Vinicius na home) |
 | 4 | Vídeo da seção "Transmissões ao vivo" | ✅ (vídeo do Vinicius aplicado; aguardando conferência no site publicado) |
-| 5 | Telas visuais (Entrar, Criar conta, Painel) | ⬜ |
+| 5 | Telas visuais (Entrar, Criar conta, Painel) | ✅ (aguardando conferência no site publicado) |
 | 6 | Animações, acessibilidade e SEO | ⬜ |
 | 7 | Revisão final de qualidade | ⬜ |
 | 8 | Finalização (README, medição final, repositório) | ⬜ |
@@ -186,6 +186,6 @@ Metastorm/
 - **Etapa 4 — vídeo:** trecho 0:22–0:38 do `Download.mp4` enviado pelo Vinicius (repost no TikTok de @thelastclipscsgo da transmissão do IEM Rio Major 2022). Marca d'água do TikTok mantida de propósito (não remover). ⚠️ Não é licença livre: registrado no `CREDITS.md`; para divulgação pública, sugerir gameplay gravada pelo próprio Vinicius. Ele pediu "como um gif": mantido em vídeo porque o GIF teria 19,5 MB contra ~1,4 MB (ver `docs/video.md`).
 - **Etapa 4 — decisão técnica:** o `<video>` NÃO usa o atributo `autoplay`. O `LiveVideo.astro` toca e pausa por visibilidade (IntersectionObserver), baixa o poster só perto da tela e tem botão pausar/reproduzir (acessibilidade). Respeita `prefers-reduced-motion` e `saveData`.
 - **Etapa 4 — não testado:** reprodução no Firefox e no Safari/iPhone (o ambiente só tem Chromium). O Vinicius deve conferir no site publicado; WebM é a 1ª fonte e o MP4 é o plano B.
-- **Etapa 2 — Entrar / Criar conta:** os links já apontam para `entrar/` e `criar-conta/`, que dão 404 até a Etapa 5.
+- **Etapa 5 — telas:** `/entrar/`, `/criar-conta/` e `/painel/` prontas. Formulários sem atributo `name` (nada é serializado), validação própria em português, ao validar levam ao painel sem enviar/salvar nada. O painel tem `noindex` de propósito (por isso o SEO do Lighthouse nele é 63; as demais páginas dão 100). Conteúdo fictício em `src/data/painel.ts` (torneios, clã, números): revisar/aprovar com o Vinicius. Notícias e Loja são só placeholders. Não há checkbox de termos (não existem termos de uso).
 - Pasta fica dentro do **Google Drive**. Como o build roda no GitHub, não é preciso `npm install` local (sem `node_modules` no Drive). Se um dia instalar localmente, preferir uma pasta fora do Drive. Evitar mexer no repositório por dois computadores ao mesmo tempo (o Drive pode criar conflitos na pasta `.git`).
 - Nome do repositório e URL final no GitHub Pages: preencher após o 1º push.

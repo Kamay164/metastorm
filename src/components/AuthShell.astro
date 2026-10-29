@@ -1,0 +1,207 @@
+---
+/**
+ * Moldura das telas Entrar e Criar conta: cartão com o formulário + painel visual ao lado (desktop).
+ * Demonstração: o formulário valida no navegador e leva ao painel, sem enviar nem salvar nada.
+ */
+import { Image } from 'astro:assets';
+import heroImg from '../assets/images/hero-painel.webp';
+import SectionTitle from './SectionTitle.astro';
+
+interface Props {
+  titulo: string;
+  texto: string;
+  /** Para onde ir quando o formulário estiver válido (caminho relativo à raiz do site). */
+  destino: string;
+  formId: string;
+}
+const { titulo, texto, destino, formId } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<section class="auth tom-escuro" aria-labelledby="titulo-auth">
+  <div class="container auth__grade">
+    <div class="auth__cartao">
+      <SectionTitle id="titulo-auth" title={titulo} lead={texto} level={1} />
+
+      <p class="auth__aviso" role="note">
+        <strong>Tela de demonstração.</strong> Nada que você digitar é enviado ou salvo.
+      </p>
+
+      <form id={formId} data-demo-form data-destino={`${base}${destino}`} novalidate>
+        <slot />
+        <p class="auth__status" data-status role="alert"></p>
+        <div class="auth__acoes">
+          <slot name="acao" />
+        </div>
+      </form>
+      <noscript>
+        <p class="auth__aviso">Ative o JavaScript para testar o formulário de demonstração.</p>
+      </noscript>
+
+      <div class="auth__rodape"><slot name="rodape" /></div>
+    </div>
+
+    <div class="auth__visual" aria-hidden="true">
+      <Image src={heroImg} alt="" widths={[640, 960]} sizes="(min-width: 1024px) 40vw, 0px" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<script>
+  const mensagens = {
+    vazio: 'Preencha este campo.',
+    email: 'Digite um e-mail válido, como nome@exemplo.com.',
+    curto: (n: number) => `Use pelo menos ${n} caracteres.`,
+    igual: 'Os valores não são iguais.',
+    marcar: 'Marque esta opção para continuar.',
+  };
+
+  document.querySelectorAll<HTMLFormElement>('[data-demo-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+
+    const erroDe = (input: HTMLInputElement): string => {
+      const v = input.value.trim();
+      if (input.type === 'checkbox') return input.checked ? '' : mensagens.marcar;
+      if (input.required && !v) return mensagens.vazio;
+      if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return mensagens.email;
+      const min = Number(input.getAttribute('minlength') || 0);
+      if (min && input.value.length < min) return mensagens.curto(min);
+      const outro = input.dataset.igualA && form.querySelector<HTMLInputElement>('#' + input.dataset.igualA);
+      if (outro && input.value !== outro.value) return mensagens.igual;
+      return '';
+    };
+
+    const validar = (input: HTMLInputElement): boolean => {
+      const msg = erroDe(input);
+      const saida = form.querySelector<HTMLElement>('#' + input.id + '-erro');
+      if (saida) saida.textContent = msg;
+      input.setAttribute('aria-invalid', String(Boolean(msg)));
+      return !msg;
+    };
+
+    const campos = [...form.querySelectorAll<HTMLInputElement>('input')];
+    // depois do primeiro erro, revalida enquanto a pessoa digita
+    campos.forEach((c) => {
+      c.addEventListener('blur', () => c.value && validar(c));
+      c.addEventListener('input', () => c.getAttribute('aria-invalid') === 'true' && validar(c));
+      c.addEventListener('change', () => c.type === 'checkbox' && validar(c));
+    });
+
+    form.querySelectorAll<HTMLButtonElement>('[data-mostrar]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const alvo = form.querySelector<HTMLInputElement>('#' + b.getAttribute('aria-controls'));
+        if (!alvo) return;
+        const mostrar = alvo.type === 'password';
+        alvo.type = mostrar ? 'text' : 'password';
+        b.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+        b.setAttribute('aria-pressed', String(mostrar));
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // nada é enviado para lugar nenhum
+      const invalidos = campos.filter((c) => !validar(c));
+      if (invalidos.length) {
+        status.textContent = `Corrija ${invalidos.length === 1 ? '1 campo' : invalidos.length + ' campos'} para continuar.`;
+        invalidos[0].focus();
+        return;
+      }
+      status.textContent = 'Tudo certo! Levando você ao painel de demonstração…';
+      form.reset(); // não guarda nada
+      setTimeout(() => (location.href = form.dataset.destino!), 600);
+    });
+  });
+</script>
+
+<style>
+  .auth {
+    padding-block: var(--e-7);
+    min-height: calc(100vh - 4.5rem);
+    display: flex;
+    align-items: center;
+  }
+
+  .auth__grade {
+    display: grid;
+    gap: var(--e-7);
+    align-items: stretch;
+  }
+
+  .auth__cartao {
+    display: grid;
+    gap: var(--e-5);
+    align-content: start;
+    padding: var(--e-5);
+    background: var(--c-grafite);
+    border: 1px solid var(--c-aco);
+    box-shadow: var(--sombra);
+  }
+
+  .auth__aviso {
+    padding: var(--e-3) var(--e-4);
+    border-left: 4px solid var(--c-laranja);
+    background: rgb(243 100 34 / 0.1);
+    color: var(--c-gelo);
+    font-size: var(--t-sm);
+  }
+
+  form {
+    display: grid;
+    gap: var(--e-5);
+  }
+
+  .auth__status {
+    color: var(--c-gelo);
+    font-weight: 500;
+  }
+
+  .auth__status:empty {
+    display: none;
+  }
+
+  .auth__acoes :global(.btn) {
+    width: 100%;
+  }
+
+  .auth__rodape {
+    color: var(--c-nevoa);
+    font-size: var(--t-sm);
+  }
+
+  .auth__rodape :global(a) {
+    color: var(--c-laranja);
+    font-weight: 500;
+  }
+
+  .auth__visual {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(2rem 0, 100% 0, 100% calc(100% - 2rem), calc(100% - 2rem) 100%, 0 100%, 0 2rem);
+  }
+
+  .auth__visual :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 50%;
+    filter: brightness(1.5) contrast(1.05);
+  }
+
+  @media (min-width: 480px) {
+    .auth__cartao {
+      padding: var(--e-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .auth__grade {
+      grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
+      gap: var(--e-8);
+    }
+
+    .auth__visual {
+      display: block;
+    }
+  }
+</style>

@@ -99,3 +99,14 @@ O peso inicial caiu cerca de **75 vezes**. As notas de Performance foram medidas
 | LCP | 1,7 s (celular) · 0,4 s (desktop) |
 
 Ao primeiro teste, o poster do vídeo (abaixo da dobra) foi baixado junto com a página e o peso subiu para 273 KB, com LCP de 2,4 s no celular. Passei a baixar o poster só quando o vídeo está perto da tela, e os números voltaram ao normal.
+
+## Etapa 5 — telas Entrar, Criar conta e Painel (medição local, Lighthouse 13.6)
+
+| Página | Celular (Perf/A11y/BP/SEO) | Desktop | LCP celular | Peso |
+|---|---|---|---|---|
+| `/entrar/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0,8 s | ~100 KB |
+| `/criar-conta/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0,8 s | ~100 KB |
+| `/painel/` | 100 / 100 / 100 / 63 | 100 / 100 / 100 / 63 | 0,8 s | ~104 KB |
+
+O SEO de 63 no painel é esperado: a página tem `noindex` de propósito (é demonstração, não deve aparecer no Google). Sem scroll horizontal em 360/768/1024/1440 px e sem erros no console. Ao validar o formulário nenhuma requisição é feita e nada vai para localStorage, sessionStorage ou cookies.
+
