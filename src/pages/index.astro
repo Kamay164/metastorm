@@ -26,16 +26,16 @@ import { etapas } from '../data/etapas';
         title="Explore seu lado competitivo criando e participando de torneios de qualquer jogo"
         caps={false}
       />
-      <GameMarquee jogos={jogos} label="Jogos disponíveis para torneios" />
+      <div data-revelar><GameMarquee jogos={jogos} label="Jogos disponíveis para torneios" /></div>
     </div>
   </section>
 
   <!-- Níveis de competição -->
   <section id="competicoes" class="secao tom-escuro" aria-labelledby="titulo-niveis">
     <div class="container pilha">
-      <SectionTitle id="titulo-niveis" title="Competições para todos os níveis" />
+      <SectionTitle id="titulo-niveis" title="Competições para todos os níveis" revelar />
       <ul class="niveis" role="list">
-        {niveis.map((nivel) => <li><LevelCard nivel={nivel} /></li>)}
+        {niveis.map((nivel, i) => <li data-revelar style={`--atraso:${i * 90}ms`}><LevelCard nivel={nivel} /></li>)}
       </ul>
     </div>
   </section>
@@ -43,9 +43,9 @@ import { etapas } from '../data/etapas';
   <!-- Etapas do torneio -->
   <section id="etapas" class="secao tom-laranja" aria-labelledby="titulo-etapas">
     <div class="container pilha">
-      <SectionTitle id="titulo-etapas" title="Cuidamos de todas as etapas" />
+      <SectionTitle id="titulo-etapas" title="Cuidamos de todas as etapas" revelar />
       <ol class="etapas" role="list">
-        {etapas.map((etapa) => <StepCard titulo={etapa.titulo} texto={etapa.texto} />)}
+        {etapas.map((etapa, i) => <StepCard titulo={etapa.titulo} texto={etapa.texto} atraso={i * 90} />)}
       </ol>
     </div>
   </section>
@@ -58,8 +58,9 @@ import { etapas } from '../data/etapas';
         title="Torneios e transmissões ao vivo, uma combinação perfeita"
         lead="Acompanhe as transmissões dos seus campeonatos pela nossa plataforma."
         align="center"
+        revelar
       />
-      <div class="palco">
+      <div class="palco" data-revelar>
         <LiveVideo label="Trecho de gameplay de CS:GO da transmissão do IEM Rio Major 2022, em vídeo mudo e em loop" />
       </div>
     </div>

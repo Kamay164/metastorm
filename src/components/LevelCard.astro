@@ -49,6 +49,12 @@ const { nivel } = Astro.props;
 
   .nivel :global(img) {
     object-fit: cover;
+    transition: transform var(--dur-lenta) var(--ease);
+  }
+
+  /* micro-interação: a foto se aproxima um pouco no hover */
+  .nivel:hover :global(img) {
+    transform: scale(1.05);
   }
 
   /* degradê que garante a leitura do nome sobre qualquer foto */
@@ -79,5 +85,11 @@ const { nivel } = Astro.props;
     height: 0.25rem;
     margin-bottom: var(--e-2);
     background: var(--c-laranja);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .nivel:hover .nivel__nome::before {
+    transform: scaleX(1.6);
   }
 </style>

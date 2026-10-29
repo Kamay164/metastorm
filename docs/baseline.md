@@ -110,3 +110,17 @@ Ao primeiro teste, o poster do vídeo (abaixo da dobra) foi baixado junto com a 
 
 O SEO de 63 no painel é esperado: a página tem `noindex` de propósito (é demonstração, não deve aparecer no Google). Sem scroll horizontal em 360/768/1024/1440 px e sem erros no console. Ao validar o formulário nenhuma requisição é feita e nada vai para localStorage, sessionStorage ou cookies.
 
+## Etapa 6 — animações, acessibilidade e SEO (medição local, Lighthouse 13.6)
+
+| Página | Celular (Perf/A11y/BP/SEO) | Desktop | LCP celular | Peso |
+|---|---|---|---|---|
+| `/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 1,4 s | ~197 KB |
+| `/entrar/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0,8 s | ~101 KB |
+| `/criar-conta/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 | 0,8 s | ~101 KB |
+| `/painel/` | 100 / 100 / 100 / 66 | 100 / 100 / 100 / 66 | 0,8 s | ~104 KB |
+
+- **axe-core 4** (regras WCAG 2.0/2.1/2.2 A e AA + boas práticas): 0 violações nas 4 páginas, em 360 e 1440 px.
+- **Teclado:** todos os itens recebem foco visível, na ordem da página (pular para o conteúdo → logo → menu → botões → vídeo → rodapé).
+- **Reduzir movimento:** todos os elementos animados ficam visíveis desde o início.
+- O SEO 66 do painel vem só do `noindex` proposital.
+

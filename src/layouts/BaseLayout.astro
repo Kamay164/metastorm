@@ -19,10 +19,17 @@ interface Props {
   noindex?: boolean;
   /** true = área do usuário (painel): troca o cabeçalho público pela barra do usuário. */
   app?: boolean;
+  /** Imagem de compartilhamento (Open Graph), caminho relativo à raiz do site. */
+  ogImage?: string;
 }
 
-const { title, description, noindex = false, app = false } = Astro.props;
+const { title, description, noindex = false, app = false, ogImage = 'og.jpg' } = Astro.props;
 const base = import.meta.env.BASE_URL;
+// Endereços absolutos (o Open Graph exige URL completa). O SITE_URL vem do GitHub Actions;
+// sem ele (build local) usa o endereço do servidor de teste.
+const site = Astro.site ?? new URL('http://localhost:4321');
+const canonical = new URL(Astro.url.pathname, site).href;
+const imagem = new URL(`${base}${ogImage}`, site).href;
 const fullTitle = title === 'Metastorm' ? title : `${title} | Metastorm`;
 ---
 
@@ -35,6 +42,21 @@ const fullTitle = title === 'Metastorm' ? title : `${title} | Metastorm`;
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#1b1d21" />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href={`${base}sitemap.xml`} />
+
+    <!-- Compartilhamento (WhatsApp, LinkedIn, Discord, X…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Metastorm" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imagem} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Metastorm: Explore seu lado pro-player" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href={`${base}favicon.png`} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
@@ -48,5 +70,25 @@ const fullTitle = title === 'Metastorm' ? title : `${title} | Metastorm`;
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // Entrada ao rolar: marca como .revelado o que entra na tela (CSS em global.css).
+      const itens = document.querySelectorAll<HTMLElement>('[data-revelar]');
+      if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver(
+          (entradas) => {
+            entradas.forEach((e) => {
+              if (!e.isIntersecting) return;
+              e.target.classList.add('revelado');
+              obs.unobserve(e.target);
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+        itens.forEach((el) => obs.observe(el));
+      } else {
+        itens.forEach((el) => el.classList.add('revelado'));
+      }
+    </script>
   </body>
 </html>

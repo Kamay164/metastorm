@@ -6,12 +6,14 @@
 interface Props {
   titulo: string;
   texto: string;
+  /** Atraso (ms) da animação de entrada, para escalonar os cartões. */
+  atraso?: number;
 }
 
-const { titulo, texto } = Astro.props;
+const { titulo, texto, atraso = 0 } = Astro.props;
 ---
 
-<li class="etapa">
+<li class="etapa" data-revelar style={`--atraso:${atraso}ms`}>
   <h3 class="etapa__titulo">{titulo}</h3>
   <p class="etapa__texto">{texto}</p>
 </li>
@@ -44,6 +46,12 @@ const { titulo, texto } = Astro.props;
     font-weight: 700;
     line-height: 1;
     color: var(--c-laranja-texto);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  /* micro-interação: o número sobe um pouco no hover */
+  .etapa:hover::before {
+    transform: translateY(-0.25rem);
   }
 
   .etapa__titulo {

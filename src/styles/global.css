@@ -165,3 +165,22 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Entrada ao rolar ---------- */
+/* Elementos com data-revelar sobem e aparecem quando entram na tela (script no BaseLayout).
+   Só com JavaScript ativo (.js) e sem "reduzir movimento": nos outros casos ficam visíveis desde o início.
+   Use --atraso para escalonar itens de uma lista. Nunca usar no topo da página (atrasaria o LCP). */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-revelar] {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity var(--dur-lenta) var(--ease) var(--atraso, 0ms),
+      transform var(--dur-lenta) var(--ease) var(--atraso, 0ms);
+  }
+
+  .js [data-revelar].revelado {
+    opacity: 1;
+    transform: none;
+  }
+}
